@@ -223,7 +223,7 @@ class PACEBackendStack(Stack):
             self,
             "StatusEnumLayer",
             entry=os.path.join(os.path.dirname(__file__), "shared"),
-            compatible_runtimes=[lambda_.Runtime.PYTHON_3_12],
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_13],
         )
 
         # Create API from construct

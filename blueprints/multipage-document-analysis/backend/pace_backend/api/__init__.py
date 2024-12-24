@@ -116,7 +116,7 @@ class DocumentAPI(Construct):
             entry="./pace_backend/api/lambda/start_text_extraction_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[shared_status_lambda_layer],
             environment={
                 "DOCUMENTS_DYNAMO_DB_TABLE_NAME": documents_table.table_name,
@@ -160,7 +160,7 @@ class DocumentAPI(Construct):
             entry="./pace_backend/api/lambda/get_job_status_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             environment={
                 "DOCUMENTS_DYNAMO_DB_TABLE_NAME": documents_table.table_name,
             },
@@ -190,7 +190,7 @@ class DocumentAPI(Construct):
             entry="./pace_backend/api/lambda/get_job_details_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[shared_status_lambda_layer],
             environment={
                 "DOCUMENTS_DYNAMO_DB_TABLE_NAME": documents_table.table_name,
@@ -221,7 +221,7 @@ class DocumentAPI(Construct):
             entry="./pace_backend/api/lambda/get_job_results_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[shared_status_lambda_layer],
             environment={
                 "DOCUMENTS_DYNAMO_DB_TABLE_NAME": documents_table.table_name,
@@ -252,7 +252,7 @@ class DocumentAPI(Construct):
             entry="./pace_backend/api/lambda/get_presigned_s3_url_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             environment={
                 "REGION": Stack.of(self).region,
                 "DOCUMENTS_BUCKET_NAME": document_bucket.bucket_name,

@@ -65,7 +65,7 @@ class DocAnalysisSFNPipeline(NestedStack):
             self,
             "DocInfoLayer",
             entry=os.path.join(os.path.dirname(__file__), "shared"),
-            compatible_runtimes=[lambda_.Runtime.PYTHON_3_12],
+            compatible_runtimes=[lambda_.Runtime.PYTHON_3_13],
         )
 
 
@@ -76,7 +76,7 @@ class DocAnalysisSFNPipeline(NestedStack):
             entry="./pace_backend/text_analysis_workflow/chunk_textract_document_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[shared_status_lambda_layer],
             environment={
                 "POWERTOOLS_LOG_LEVEL": "DEBUG",
@@ -120,7 +120,7 @@ class DocAnalysisSFNPipeline(NestedStack):
             entry="./pace_backend/text_analysis_workflow/extract_data_to_schema_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.shared_doc_info_layer, shared_status_lambda_layer],
             environment={
                 "POWERTOOLS_LOG_LEVEL": "DEBUG",
@@ -169,7 +169,7 @@ class DocAnalysisSFNPipeline(NestedStack):
             entry="./pace_backend/text_analysis_workflow/consolidate_report_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.shared_doc_info_layer, shared_status_lambda_layer],
             environment={
                 "POWERTOOLS_LOG_LEVEL": "DEBUG",
@@ -216,7 +216,7 @@ class DocAnalysisSFNPipeline(NestedStack):
             entry="./pace_backend/text_analysis_workflow/persist_results_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[shared_status_lambda_layer],
             environment={
                 "POWERTOOLS_LOG_LEVEL": "DEBUG",
@@ -250,7 +250,7 @@ class DocAnalysisSFNPipeline(NestedStack):
             entry="./pace_backend/text_analysis_workflow/generate_pdf_fn",
             index="index.py",
             handler="lambda_handler",
-            runtime=lambda_.Runtime.PYTHON_3_12,
+            runtime=lambda_.Runtime.PYTHON_3_13,
             layers=[self.shared_doc_info_layer, shared_status_lambda_layer],
             environment={
                 "POWERTOOLS_LOG_LEVEL": "DEBUG",
