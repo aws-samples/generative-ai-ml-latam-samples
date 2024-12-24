@@ -62,8 +62,6 @@ class InformacionGeneral(BaseModel):
             ("Total de números de acciones o partes sociales", str(self.total_stock))
         )
 
-        print(tuples_table)
-
         return tuples_table
 
 
