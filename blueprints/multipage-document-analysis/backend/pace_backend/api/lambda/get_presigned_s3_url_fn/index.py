@@ -38,7 +38,15 @@ UPLOAD_DOCUMENT_BY_ID_PATTERN = re.compile("(/[a-zA-Z0-9-]*)*/upload/[A-Za-z0-9-
 
 logger = Logger()
 
-s3_client = boto3.client("s3", config=Config(region_name=REGION, signature_version="s3v4"))
+s3_client = boto3.client(
+    "s3",
+    region_name=REGION,
+    config=Config
+    (
+        s3={'addressing_style': 'path'},
+        signature_version="s3v4"
+    )
+)
 
 duration = 24 * 60 * 60
 
