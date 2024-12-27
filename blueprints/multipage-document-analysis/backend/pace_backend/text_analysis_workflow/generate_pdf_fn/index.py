@@ -59,7 +59,7 @@ def create_pdf(report):
     pdf.cell(200, 10, txt="Resumen de Documento", ln=1, align="C")
 
     ### Create section table
-    for section in report_sections:
+    for i, section in zip(range(len(report_sections)), report_sections):
         if section in report.keys():
 
             pdf.cell(200, 10, txt="", ln=1, align="C")
@@ -80,7 +80,8 @@ def create_pdf(report):
                     for datum in data_row:
                         row.cell(datum)
 
-            pdf.add_page()
+            if i < len(report_sections) - 1:
+                pdf.add_page()
 
     return pdf
 

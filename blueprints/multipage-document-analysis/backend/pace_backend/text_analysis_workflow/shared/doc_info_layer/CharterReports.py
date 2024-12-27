@@ -14,11 +14,11 @@
 # HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-import math
+from traceback import print_exc
 
 from pydantic import BaseModel, Field
 from typing import List
+
 
 class InformacionGeneral(BaseModel):
     """Informacion general acerca de la sociedad o compañia"""
@@ -35,10 +35,21 @@ class InformacionGeneral(BaseModel):
     def to_tuples_table(self):
         """How is this object represented a set of tuples that can be printed to a PDF using the fpdf library"""
 
-        cell_max_char = 150 # Max number of characters per cell
+        cell_max_char = 250 # Max number of characters per cell
         temp_table = []
 
-        social_object_txt = '\n'.join([f"{i + 1}.- {objective}" for i, objective in zip(range(len(self.social_object)), self.social_object)])
+        # Concatenate social object elements into a string of maximum cell_max_char characters each
+        social_object_max_char_elements = []
+        if len(self.social_object) > 0:
+            social_object_txt = f"{1}. " + self.social_object[0]
+            for i in range(1, len(self.social_object)):
+                if len(social_object_txt) + len(self.social_object[i]) <= cell_max_char - 10: # Consider extra 10 characters for the numbers
+                    social_object_txt += f"\n{i+1}. " + self.social_object[i]
+                else:
+                    social_object_max_char_elements.append(social_object_txt)
+                    social_object_txt = f"{i+1}. " + self.social_object[i]
+            if social_object_txt != "":
+                social_object_max_char_elements.append(social_object_txt)
 
         tuples_table = (
             ("Constitución", ""),
@@ -46,11 +57,11 @@ class InformacionGeneral(BaseModel):
             ("Fecha de Constitución", self.expedition_date),
             ("Domicilio Social", self.expedition_city),
             ("Duración", self.duration),
-            ("Objetivos Sociales", social_object_txt[:cell_max_char]),
+            ("Objetivos Sociales", social_object_max_char_elements[0]),
         )
 
-        for i in range(1, (math.ceil(len(social_object_txt)/cell_max_char)-1)):
-            temp_table.append(("", f"{i}.-" + social_object_txt[cell_max_char*i:cell_max_char*(i+1)]))
+        for i in range(1, len(social_object_max_char_elements)):
+            temp_table.append(("", social_object_max_char_elements[i]))
 
         if len(temp_table)>0:
             tuples_table += tuple(temp_table)
@@ -107,7 +118,7 @@ class InformacionAdministracion(BaseModel):
     def to_tuples_table(self):
         """How is this object represented a set of tuples that can be printed to a PDF using the fpdf library"""
 
-        cell_max_char = 150 # Max number of characters per cell
+        cell_max_char = 250 # Max number of characters per cell
 
         tuples_table = [
             ("", "Administración", ""),
@@ -117,19 +128,30 @@ class InformacionAdministracion(BaseModel):
         for manager_info in self.managers:
 
             temp_table = []
-            powers_list = '\n'.join([f"{i+1}.- {power}" for i, power in zip(range(len(manager_info.powers)), manager_info.powers)])
+
+            # Concatenate powers elements into a string of maximum cell_max_char characters each
+            powers_max_char_elements = []
+            if len(manager_info.powers) > 0:
+                powers_txt = f"{1}. " + manager_info.powers[0]
+                for i in range(1, len(manager_info.powers)):
+                    if len(powers_txt) + len(manager_info.powers[i]) <= cell_max_char - 10:  # Consider extra 10 characters for the numbers
+                        powers_txt += f"\n{i + 1}. " + manager_info.powers[i]
+                    else:
+                        powers_max_char_elements.append(powers_txt)
+                        powers_txt = f"{i + 1}. " + manager_info.powers[i]
+                if powers_txt != "":
+                    powers_max_char_elements.append(powers_txt)
 
             administration_element = (
                 manager_info.name,
                 manager_info.position,
-                powers_list[:cell_max_char]
+                powers_max_char_elements[0]
             )
 
             tuples_table.append(administration_element)
 
-            for i in range(1, (math.ceil(len(powers_list) / cell_max_char) - 1)):
-                powers_row = ("", "", powers_list[cell_max_char * i:cell_max_char * (i + 1)])
-                temp_table.append(powers_row)
+            for i in range(1, len(powers_max_char_elements)):
+                temp_table.append(("", "", powers_max_char_elements[i]))
 
             if len(temp_table)>0:
                 tuples_table += tuple(temp_table)
@@ -146,7 +168,7 @@ class RepresentanteLegal(BaseModel):
     def to_tuples_table(self):
         """How is this object represented a set of tuples that can be printed to a PDF using the fpdf library"""
 
-        cell_max_char = 150  # Max number of characters per cell
+        cell_max_char = 250  # Max number of characters per cell
 
         tuples_table = [
             ("", "Apoderados", ""),
@@ -154,19 +176,31 @@ class RepresentanteLegal(BaseModel):
         ]
 
         temp_table = []
-        powers_list = '\n'.join([f"{i+1}.- {power}" for i, power in zip(range(len(self.powers)), self.powers)])
+
+        # Concatenate powers elements into a string of maximum cell_max_char characters each
+        powers_max_char_elements = []
+        if len(self.powers) > 0:
+            powers_txt = f"{1}. " + self.powers[0]
+            for i in range(1, len(self.powers)):
+                if len(powers_txt) + len(
+                        self.powers[i]) <= cell_max_char - 10:  # Consider extra 10 characters for the numbers
+                    powers_txt += f"\n{i + 1}. " + self.powers[i]
+                else:
+                    powers_max_char_elements.append(powers_txt)
+                    powers_txt = f"{i + 1}. " + self.powers[i]
+            if powers_txt != "":
+                powers_max_char_elements.append(powers_txt)
 
         legal_rep_element = (
             self.name,
             self.position,
-            powers_list[:cell_max_char]
+            powers_max_char_elements[0]
         )
 
         tuples_table.append(legal_rep_element)
 
-        for i in range(1, (math.ceil(len(powers_list) / cell_max_char) - 1)):
-            powers_row = ("", "", powers_list[cell_max_char * i:cell_max_char * (i + 1)])
-            temp_table.append(powers_row)
+        for i in range(1, len(powers_max_char_elements)):
+            temp_table.append(("", "", powers_max_char_elements[i]))
 
         if len(temp_table) > 0:
             tuples_table += tuple(temp_table)
