@@ -114,22 +114,54 @@ def lambda_handler(event, _context: LambdaContext):
     id = str(uuid.uuid4())
     s3_key = f"{id}/{filename}"
 
-    job_id = event["Payload"]["body"]["job_id"]
+    # Attempt to retrieve job results
+    try:
+        job_id = event["Payload"]["body"]["job_id"]
 
-    doc_report = get_item_by_id(job_id)
+        doc_report = get_item_by_id(job_id)
 
-    logger.info("Creating PDF for")
-    logger.info(doc_report)
+        logger.info("Creating PDF for")
+        logger.info(doc_report)
+    except Exception as e:
+        logger.error(f"Error retrieving item from DynamoDB: {e}")
 
-    report_pdf = create_pdf(doc_report)
+        table.update_item(
+            Key={"id": job_id},
+            UpdateExpression="SET #status = :status",
+            ExpressionAttributeNames={"#status": "status"},
+            ExpressionAttributeValues={":status": StatusEnum.ERROR.name},
+        )
 
-    #Save a file to the lambda local filesystem
-    tmpdir = tempfile.mkdtemp()
-    tmpfile_path = os.path.join(tmpdir,filename)
-    report_pdf.output(tmpfile_path)
+        return {
+            "statusCode": 500,
+            "error": "Failed to get item from DynamoDB"
+        }
 
-    #Upload the file to S3
-    s3.upload_file(tmpfile_path, S3_BUCKET, s3_key)
+    # Attempt to generate PDF report
+    try:
+        report_pdf = create_pdf(doc_report)
+
+        #Save a file to the lambda local filesystem
+        tmpdir = tempfile.mkdtemp()
+        tmpfile_path = os.path.join(tmpdir,filename)
+        report_pdf.output(tmpfile_path)
+
+        #Upload the file to S3
+        s3.upload_file(tmpfile_path, S3_BUCKET, s3_key)
+    except  Exception as e:
+        logger.error(f"Error creating PDF: {e}")
+
+        table.update_item(
+            Key={"id": job_id},
+            UpdateExpression="SET #status = :status",
+            ExpressionAttributeNames={"#status": "status"},
+            ExpressionAttributeValues={":status": StatusEnum.ERROR.name},
+        )
+
+        return {
+            "statusCode": 500,
+            "error": "Failed to create PDF"
+        }
 
     # Update status in DynamoDB table
     try:
