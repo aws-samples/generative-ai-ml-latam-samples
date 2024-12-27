@@ -14,9 +14,11 @@ End-to-end solutions for a specific use case.
 
 Here is a list of available blueprints:
 
-| Use Case                                                    | Industry                                | Description                    | Type        | Languages        |
-|-------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------|
-| [Multipage Document Analysis](blueprints/multipage-document-analysis/) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries you can leveraging Amazon Bedrock and the Claude 3 family of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English |
+| Use Case                                                    | Industry                                | Description                    | Type        | Languages                                      |
+|-------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------------------------------------|
+| [Multipage Document Analysis](blueprints/multipage-document-analysis/) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries you can leveraging Amazon Bedrock and the Claude 3 family of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English                               |
+| [Contract Compliance Analysis](https://github.com/aws-samples/generative-ai-cdk-constructs-samples/tree/main/samples/contract-compliance-analysis) | Legal / Cross-industry                  | This project automates the analysis of contracts by splitting them into clauses, determining clause types, evaluating compliance against a customer's legal guidelines, and assessing overall contract risk based on the number of compliant clauses. This is achieved through a workflow that leverages Large Language Models via Amazon Bedrock. | Python for Backend, TypeScript (React) for Frontend | English (can be customized to other languages) |
+
 
 ### Samples
 Code samples/notebooks that demonstrate a specific AI/ML functionality in AWS.
