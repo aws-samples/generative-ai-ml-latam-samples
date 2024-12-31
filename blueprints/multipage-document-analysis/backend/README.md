@@ -6,13 +6,13 @@ This stack will help you provision the required infrastucture to analyse complex
 
 To successfully deploy and run this stack you must:
 
-* Configure the AWS Credentials in your environment. Refer to [Configuration and credential file settings](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
+* Download and install [NodeJS](https://nodejs.org/en) >= 14.0.0 
+* Download and install [Python](https://www.python.org/downloads/release/python-3100/) >= 3.10
+* Download and install Docker. Refer to [Docker](https://www.docker.com/products/docker-desktop/).
 * Download and install AWS CLI. Refer to [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html).
 * Install and configure AWS CDK. Refer to Installing the [AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html). 
-* Download and install Docker. Refer to [Docker](https://www.docker.com/products/docker-desktop/).
+* Configure the AWS Credentials in your environment. Refer to [Configuration and credential file settings](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
 * A [bootstrapped AWS account](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html). 
-* NodeJS >= 14.0.0 
-* Python >= 3.10
 * Have [access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to Anthropic's Claude 3 Haiku and Claude 3.5 Sonnet V1 models
 
 ## Setup
@@ -24,7 +24,10 @@ directory.  To create the virtualenv it assumes that there is a `python3`
 package. If for any reason the automatic creation of the virtualenv fails,
 you can create the virtualenv manually.
 
-To manually create a virtualenv on MacOS and Linux:
+Before proceeding with the following instructions, please make sure you are inside the folder: 
+*multipage-document-analys/backend*
+
+Create a virtualenv on MacOS and Linux:
 
 ```
 python3 -m venv .venv
@@ -49,11 +52,13 @@ Once the virtualenv is activated, you can install the required dependencies.
 pip install -r requirements.txt
 ```
 
-Since this stack pulls Docke images from the [AWS ECR Public registry](https://docs.aws.amazon.com/AmazonECR/latest/public/public-registry-auth.html) you need to log in into it.
+Since this stack pulls Docker images from the [AWS ECR Public registry](https://docs.aws.amazon.com/AmazonECR/latest/public/public-registry-auth.html) you need to log in into it.
 
 ```
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 ```
+
+Note:  If you are on Windows and you received the following error: ``` Error saving credentials: error storing credentials - err: exit status 1, out: The stub received bad data. ``` Check the following workaround: https://stackoverflow.com/questions/60807697/docker-login-error-storing-credentials-the-stub-received-bad-data
 
 At this point you can now synthesize the CloudFormation template for this code.
 
@@ -64,6 +69,17 @@ cdk synth
 To add additional dependencies, for example other CDK libraries, just add
 them to your `setup.py` file and rerun the `pip install -r requirements.txt`
 command.
+
+## (Optional) Bootstrap your account
+Bootstrapping prepares your AWS environment by provisioning specific AWS resources in your environment that are used by the AWS CDK. These resources are commonly referred to as your bootstrap resources. For more information go to the following AWS link: [AWS CDK bootstratpping](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html)
+
+To bootstrap your account run the following command: 
+
+```
+cdk bootstrap
+```
+Note: This step is only required if your AWS account has not bootstrapped for CDK yet. 
+
 
 ## Creation of the document processing backend
 
@@ -95,6 +111,12 @@ cdk deploy \
 --parameters PagesChunk=<Number of pages per chunk> \
 --parameters ExtractionConfidenceLevel=<Threshold (0-99) for filtering extractions by the model>
 ```
+| Parameter Name                                                   | Description                               
+|-------------------------------------------------------------|-----------------------------------------|
+| LanguageCode| The language of the input document being processed and desired language for output results
+| IncludeExamples| Toggle between zero-shot learning (false) and few-shot learning (true) for information extraction |
+| PagesChunk| Number of desired pages per document chunk  | 
+| ExtractionConfidenceLevel|This parameter sets the minimum confidence score that extracted data must meet to be included in further processing steps. We use an [LLM-as-a-judge](https://www.evidentlyai.com/llm-guide/llm-as-a-judge) to evaluate the accuracy and completeness of the extracted information. Set a value between 0 and 99.|
 
 Note: We carried out our experiments using a PagesChunk of 5 and an ExtractionConfidenceLevel of 85.
 

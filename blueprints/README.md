@@ -8,4 +8,4 @@ Here is a list of available blueprints:
 
 | Use Case                                                    | Industry                                | Description                    | Type        | Languages        |
 |-------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------|
-| [Multipage Document Analysis](multipage-document-analysis/) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries you can leveraging Amazon Bedrock and the Claude 3 family of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English |
+| [Multipage Document Analysis](blueprints/multipage-document-analysis/) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries leveraging Amazon Bedrock's wide array of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English                               |
