@@ -100,7 +100,7 @@ The following diagram illustrates the services and infrastructure deployed by th
 9. APIs are managed using [Amazon API Gateway](https://aws.amazon.com/api-gateway/). 
 10. Source documents and results documents are stored in an [Amazon S3](https://aws.amazon.com/s3/) bucket.
 11. [Amazon Cognito](https://aws.amazon.com/es/cognito/) is used to manage the users of the application.
-12. [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) is used to monitor and log the status of the application.
+12. [AWS WAF](https://aws.amazon.com/waf/) protect the API from security exploits.
 
 To deploy this stack run
 
