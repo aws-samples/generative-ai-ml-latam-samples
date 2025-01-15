@@ -6,6 +6,6 @@ Blueprints are end-to-end prototypes tailored for a specific use case. They cont
 
 Here is a list of available blueprints:
 
-| Use Case                                                    | Industry                                | Description                    | Type        | Languages        |
-|-------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------|
-| [Multipage Document Analysis](blueprints/multipage-document-analysis/) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries leveraging Amazon Bedrock's wide array of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English                               |
+| Use Case                                                                         | Industry                                | Description                    | Type        | Languages        |
+|----------------------------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------|
+| [Multipage Document Analysis](./multipage-document-analysis/README.md) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries leveraging Amazon Bedrock's wide array of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English                               |

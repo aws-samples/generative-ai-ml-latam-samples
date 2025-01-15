@@ -14,9 +14,9 @@ End-to-end solutions for a specific use case.
 
 Here is a list of available blueprints:
 
-| Use Case                                                    | Industry                                | Description                    | Type        | Languages                                      |
-|-------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------------------------------------|
-| [Multipage Document Analysis](blueprints/multipage-document-analysis/) | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries leveraging Amazon Bedrock's wide array of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English                               |
+| Use Case                                                                                                                                           | Industry                                | Description                    | Type        | Languages                                      |
+|----------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------------------------------------|
+| [Multipage Document Analysis](./blueprints/multipage-document-analysis/README.md)                                                                  | Financial Services/Legal/Cross-industry | Use this blueprint to extract key information from lengthy documents in highly regulated industries leveraging Amazon Bedrock's wide array of LLMs. | Backend (Pyhton) + UI (React) | Spanish, English                               |
 | [Contract Compliance Analysis](https://github.com/aws-samples/generative-ai-cdk-constructs-samples/tree/main/samples/contract-compliance-analysis) | Legal / Cross-industry                  | This project automates the analysis of contracts by splitting them into clauses, determining clause types, evaluating compliance against a customer's legal guidelines, and assessing overall contract risk based on the number of compliant clauses. This is achieved through a workflow that leverages Large Language Models via Amazon Bedrock. | Python for Backend, TypeScript (React) for Frontend | English (can be customized to other languages) |
 
 
@@ -25,10 +25,11 @@ Code samples/notebooks that demonstrate a specific AI/ML functionality in AWS.
 
 Here is a list of available samples:
 
-| Use Case                                                    | Industry                                | Description                    | Type        | Languages        |
-|-------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------|
-| [SQL Agent with Amazon Bedrock](samples/sql-bedrock-agent/README.md) | Cross Industry, Business Insights |Build and deploy a SQL Agent that lets users query databases using natural language instead of writing SQL code. The implementation combines enterprise features from Amazon Bedrock with LangChain's specialized SQL tools. | CDK Python| Multilanguage |
+| Use Case                                                                                | Industry                                | Description                    | Type        | Languages        |
+|-----------------------------------------------------------------------------------------|-----------------------------------------|--------------------------------|-------------|------------------|
+| [SQL Agent with Amazon Bedrock](samples/sql-bedrock-agent/README.md)                    | Cross Industry, Business Insights |Build and deploy a SQL Agent that lets users query databases using natural language instead of writing SQL code. The implementation combines enterprise features from Amazon Bedrock with LangChain's specialized SQL tools. | CDK Python| Multilanguage |
 | [Whatsapp with Agents for Amazon Bedrock](samples/end-user-messaging-bedrock/README.md) | Cross Industry, Customer Experience | Implement a WhatsApp communication channel using AWS End User Messaging for social integration. Integrate your business logic with Amazon Bedrock Agents for AI-powered interactions. | CDK Python| Multilanguage |
+| [Amazon Nova Samples](./samples/amazon-nova-samples/README.md)                          | Cross Industry, Customer Experience | [Amazon Nova](https://aws.amazon.com/ai/generative-ai/nova) family of models samples that cover various use cases (text generation, document processing, content generation, agentic workflows, etc).                                                                    | Jupyter Notebooks | Multilanguage |
 
 ### Proof of concepts:
   * Code samples/notebooks that aim to prove a concept in Generative AI or AIML.
