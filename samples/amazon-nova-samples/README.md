@@ -12,6 +12,7 @@ This is a set of Jupyter notebooks created to demonstrate the functionality of t
 | **Receipt processing**  | Information extraction from images            | A sample for illustrating the multimodal capabilities (image understanding) of Amazon Nova models throught the processing of a purchase receipt. | Multilanguage |
 | **Document processing** | Information extraction from documents         | A sample for illustrating the multimodal capabilities (document understanding) of Amazon Nova models throught the processing of a PDF document.  | Multilanguage |
 | **Image generation**    | Generation of content for marketing campaigns | Samples for illustrating the image generation capabilities of Amazon Nova Canvas model.                                                          | English       |
+| **Agentic Workload**   | E-commerce Assistant Implementation          | A sample demonstrating an intelligent e-commerce assistant using LangChain and Amazon Nova models. Features include product search, shipping calculations, and model comparison capabilities. | English       |
 
 ## Samples folder structure
 
@@ -19,6 +20,7 @@ This set of samples is organized as follows:
 
 ```
 amazon-nova-samples
+|---agentic-workload # Agentic workload samples
 |---text-understanding # Text understanding samples
 |---receipt-processing # Receipt processing samples
 |---document-processing # Document processing samples
