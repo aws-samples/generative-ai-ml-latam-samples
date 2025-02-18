@@ -22,9 +22,18 @@ class ChatService:
         self.chat_duration_minutes = chat_duration_minutes
         self.topic_arn = topic_arn
 
+    def set_connection_token(self, connectionToken):
+        self.connection_token = connectionToken
+
+    def set_contact_id(self, contactId):
+        self.contact_id = contactId
+
+
+    def set_streaming_id(self, streaming_id):
+        self.streaming_id = streaming_id
+
     def start_chat(
-        self, message, phone, channel, name="unknown", systemNumber="unknown"
-    ):
+        self, message, phone, channel, name="unknown", systemNumber="unknown"):
 
         start_chat_response = self.connect.start_chat_contact(
             InstanceId=self.instance_id,
@@ -49,12 +58,6 @@ class ChatService:
         print (start_chat_response)
         return start_chat_response
 
-    def send_message(self, message, connectionToken):
-        response = self.participant.send_message(
-            ContentType="text/plain", Content=message, ConnectionToken=connectionToken
-        )
-        return response
-
     def start_stream(self, ContactId):
         if not self.topic_arn:
             print ("Missing Topic ARN for start streamming")
@@ -71,9 +74,6 @@ class ChatService:
             print("Create Participant failed")
             print(e.response["Error"]["Code"])
             return None
-
-
-        
 
     def start_chat_and_stream( self, message, phone, channel, name="unknown", systemNumber="unknown"):
         start_chat_response         = self.start_chat(message, phone, channel, name, systemNumber)
@@ -140,7 +140,6 @@ class ChatService:
             print(e.response["Error"]["Code"])
             return None
         
-
     def create_participant_connection(self, token: str):
         """Create a participant connection"""
         command = dict( Type =  ['CONNECTION_CREDENTIALS'],
@@ -157,13 +156,13 @@ class ChatService:
             print(e.response["Error"]["Code"])
             return None
 
-
-    def send_message(self, connection_token: str, message: str, content_type: str = "text/plain"):
+    def send_message(self, message: str, content_type: str = "text/plain"):
         """Send a message in the chat"""
+
         command = dict(
             ContentType = content_type,
             Content = message,
-            ConnectionToken = connection_token
+            ConnectionToken = self.connection_token
         )
         
         try:
@@ -173,34 +172,59 @@ class ChatService:
             print(f"Sending message error: {str(error)}")
             return None
 
-    def send_event(self, connection_token: str):
+    def send_typing_event(self):
         """Send a typing event in the chat"""
         command = dict(
-            ConnectionToken = connection_token,
+            ConnectionToken = self.connection_token,
             ContentType = 'application/vnd.amazonaws.connect.event.typing'
         )
         
         try:
             response = self.participant.send_event(**command)
-            print("Sending event", {"command": command, "response": response})
+            # print("Sending event", {"command": command, "response": response})
         except Exception as error:
             print(f"Sending event error: {str(error)}")
 
-    def disconnect(self, connection_token: str):
+    def disconnect(self):
         """Disconnect a participant from the chat"""
+
         try:
-            response = self.participant.disconnect_participant(ConnectionToken=connection_token)
-            print("Disconnecting bot", {"connection_token": connection_token, "response": response})
+            response = self.participant.disconnect_participant(ConnectionToken=self.connection_token)
+            print("Disconnecting bot", {"connection_token": self.connection_token, "response": response})
         except Exception as error:
             print(f"Disconnecting bot error: {str(error)}")
             
-    def stop_chat_streaming(self, contact_id: str, streaming_id: str):
+    def update_contact_attributes(self, contact_id: str = None, attributes: dict = {}):
+        """
+        Updates the contact attributes for the specified contact.
+        
+        Args:
+            contact_id (str): The identifier of the contact.
+            attributes (dict): The attributes to update. Each key-value pair in this dictionary
+                             represents an attribute name and its value.
+        
+        Returns:
+            dict: The response from the update_contact_attributes operation.
+        """
+
+        formatted_attributes = {
+            key: str(value)
+            for key, value in attributes.items()
+        }
+        
+        return self.connect.update_contact_attributes(
+            InitialContactId=contact_id or self.contact_id,
+            InstanceId=self.instance_id,
+            Attributes=formatted_attributes
+        )
+            
+    def stop_chat_streaming(self, contact_id: str = None, streaming_id: str = None):
         """Stop chat streaming for a given contact"""
         try:
             command = dict(
                 InstanceId = self.instance_id,
-                ContactId = contact_id,
-                StreamingId = streaming_id
+                ContactId = contact_id or self.contact_id,
+                StreamingId = streaming_id or self.streaming_id
             )
             response = self.connect.stop_contact_streaming(**command)
             print(f"Stopping chat streaming for contact {contact_id} with streaming ID {streaming_id}")

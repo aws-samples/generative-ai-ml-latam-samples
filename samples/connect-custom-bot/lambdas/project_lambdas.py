@@ -8,6 +8,7 @@ from aws_cdk import (
 
 
 from constructs import Construct
+from layers import Boto3_1_36_21
 
 
 LAMBDA_TIMEOUT = 900
@@ -26,6 +27,8 @@ class Lambdas(Construct):
         self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
         
+        BotoLayer = Boto3_1_36_21(self, "Boto3_1_36_21")
+
         # ======================================================================
         # Comienza el custom bot
         # ======================================================================
@@ -45,6 +48,7 @@ class Lambdas(Construct):
             "Chatbot",
             code=aws_lambda.Code.from_asset("./lambdas/code/chat_bot/"),
             handler="lambda_function.lambda_handler",
+            layers=[BotoLayer.layer], # This is for multi agent support 
             **BASE_LAMBDA_CONFIG,
         )
 

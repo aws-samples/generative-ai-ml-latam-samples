@@ -30,19 +30,27 @@ def lambda_handler(event, context):
         whatsapp = WhatsappService(sns_message)
         
         for message in whatsapp.messages:
+            message.mark_as_read()
+            message.reaction("👀")
             audio = message.get_audio(download=True)  # Check if there is audio
             transcription = None
 
+
             if audio.get("location"):  # it's been downloaded
                 print("TRANSCRIBE IT")
+
+                # transcribe using Amazon Transcribe
                 transcription = transcribe_service.transcribe(audio.get("location"))
                 message.add_transcription(transcription)
 
+            #An existing conversation with Amazon Connect Chat
             contact = connections.get_contact(message.phone_number)
 
+            # Get message text content    
             text = message.get_text()
 
             if transcription:
+                # Reply the transcription to the user
                 message.text_reply(f"🔊_{transcription}_")
                 text =  transcription
 
@@ -57,7 +65,7 @@ def lambda_handler(event, context):
                 print(f"Found existing connection for {message.phone_number}")
 
                 try:
-                    send_message_response = chat.send_message(text, message.phone_number, contact['connectionToken'])
+                    send_message_response = chat.send_message(text, contact['connectionToken'])
                 except:
                     print('Invalid Connection Token')
                     connections.remove_contactId(contact['contactId'])
@@ -77,3 +85,5 @@ def lambda_handler(event, context):
                 
                 connections.insert_contact(message.phone_number, "Whatsapp", contactId, participantToken, connectionToken, customer_name, 
                         message.phone_number_id)
+                
+            message.reaction("✅")

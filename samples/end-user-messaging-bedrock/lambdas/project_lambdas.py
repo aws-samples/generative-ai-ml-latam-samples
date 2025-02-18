@@ -16,7 +16,7 @@ BASE_LAMBDA_CONFIG = dict(
     timeout=Duration.seconds(LAMBDA_TIMEOUT),
     memory_size=512,
     
-    runtime=aws_lambda.Runtime.PYTHON_3_12,
+    runtime=aws_lambda.Runtime.PYTHON_3_13,
     architecture=aws_lambda.Architecture.ARM_64,
     tracing=aws_lambda.Tracing.ACTIVE,
 )

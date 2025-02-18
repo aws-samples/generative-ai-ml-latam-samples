@@ -1,11 +1,24 @@
 import os
 
-
 from connect_chat_service import ChatService
 from connections_service import ConnectionsService
 
 
-def lambda_handler(event, context):
+def lambda_handler(event: dict, context) -> dict:
+    """
+    AWS Lambda handler for initiating chat bot interactions.
+    
+    This function handles the initial setup of chat connections when a new chat
+    is started. It creates necessary database entries, establishes the chat connection,
+    and configures the initial chat state.
+    
+    Args:
+        event (dict): Lambda event containing chat initialization parameters
+        context: Lambda context object
+        
+    Returns:
+        dict: Response containing chat connection details and initial setup status
+    """
     chat = ChatService(
         instance_id=os.environ.get("INSTANCE_ID"),
         topic_arn=os.environ.get("TOPIC_ARN"))
@@ -48,7 +61,7 @@ def lambda_handler(event, context):
             # Send initial message
             chat.send_message(
                 participant_connection['ConnectionCredentials']['ConnectionToken'],
-                'I\'m an automated assistant. Ask me questions or reply "quit" to exit.'
+                'Soy tu asistentente de servicio de envíos, hazme alguna pregunta 😉'
             )
 
     

@@ -90,8 +90,10 @@ class TranscribeService:
         return " ".join(handler.transcript)
 
 
-    def transcribe(self,s3_location):
+    def transcribe(self,s3_location, batch=False):
         # Time the transcription process
+        if batch:
+            print("Transcribing batch of ", len(s3_location), " files not Implemented")
  
         start_time = time.time()
         

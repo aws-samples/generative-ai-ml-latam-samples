@@ -43,6 +43,6 @@ def lambda_handler(event, context):
             if(message_type == 'application/vnd.amazonaws.connect.event.participant.left' or message_type == 'application/vnd.amazonaws.connect.event.chat.ended'):
                 print('participant left')
                 contactId = message['InitialContactId']
-                connections.remove_contactId(contactId)
+                # connections.remove_contactId(contactId) # Optional
 
             

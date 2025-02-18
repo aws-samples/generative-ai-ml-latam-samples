@@ -6,11 +6,9 @@ from topic import Topic
 from databases import Tables
 
 
-INSTANCE_ID             = "f5dbbb06-46e7-4435-beab-3b3303074765"
-CONTACT_FLOW_ID         = "6175e00e-b7b2-4ca1-b4b6-1b66b737f8a9"
+INSTANCE_ID             = "INSTANCE_ID"
+CONTACT_FLOW_ID         = "CONTACT_FLOW_ID"
 CHAT_DURATION_MINUTES   = 60
-
-
 
 class WhatsappEumConnectChatStack(Stack):
 
@@ -90,4 +88,7 @@ class WhatsappEumConnectChatStack(Stack):
         sns_topic_out.allow_principal("connect.amazonaws.com")
 
 
-        #CfnOutput(self, "ActiveConnectionsTable", export_name="ActiveConnectionsTable", value=tables.active_connections.table_name)
+        CfnOutput(self, "TopicArn", value=sns_topic_in.topic.topic_arn)
+
+
+
