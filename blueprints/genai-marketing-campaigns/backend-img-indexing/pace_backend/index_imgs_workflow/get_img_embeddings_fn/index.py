@@ -1,0 +1,93 @@
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# SPDX-License-Identifier: MIT-0
+
+import json
+import boto3
+import os
+import json
+import logging
+import tempfile
+import base64
+
+logger = logging.getLogger()
+logger.setLevel(os.getenv("LOG_LEVEL"))
+
+IMG_BUCKET = os.getenv("IMG_BUCKET")
+
+REGION = boto3.session.Session().region_name
+s3 = boto3.client('s3')
+bedrock_runtime = boto3.client(
+    service_name="bedrock-runtime",
+    region_name="us-east-1"
+)
+
+lambda_response = {
+    "statusCode": 200,
+    "headers": {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": True,
+    },
+    "body": {},
+}
+
+def encode_image(image_path: str = None,  # maximum 2048 x 2048 pixels
+            dimension: int = 1024,  # 1,024 (default), 384, 256
+            model_id: str = "amazon.titan-embed-image-v1"
+                 ):
+    "Get img embedding using embeddings model"
+
+    payload_body = {}
+    embedding_config = {
+        "embeddingConfig": {
+            "outputEmbeddingLength": dimension
+        }
+    }
+
+    with open(image_path, "rb") as image_file:
+        input_image = base64.b64encode(image_file.read()).decode('utf8')
+    payload_body["inputImage"] = input_image
+
+    logger.debug("embedding image")
+    logger.debug(payload_body)
+
+    response = bedrock_runtime.invoke_model(
+        body=json.dumps({**payload_body, **embedding_config}),
+        modelId=model_id,
+        accept="application/json",
+        contentType="application/json"
+    )
+
+    feature_vector = json.loads(response.get("body").read())
+
+    logger.debug("img embedding")
+    logger.debug(feature_vector)
+
+    return feature_vector
+
+def lambda_handler(event, context):
+
+    img_key = event["img_key"]
+
+    try:
+      
+        tmp_file = tempfile.mkdtemp() + '/img.jpg'
+        with open(tmp_file , 'wb') as f:
+            s3.download_fileobj(IMG_BUCKET, img_key, f)
+
+        feature_vector = encode_image(image_path=tmp_file, dimension=1024)
+
+        lambda_response['statusCode'] = 201
+        lambda_response['body']['embedding'] = feature_vector
+        lambda_response['body']['msg'] = 'success'
+
+    except Exception as e:
+        logger.error(e)
+
+        lambda_response['statusCode'] = 500
+        lambda_response['body']['msg'] = 'Could not get image embeddings'
+
+        raise e
+
+
+    return lambda_response

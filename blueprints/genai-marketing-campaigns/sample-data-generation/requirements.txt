@@ -1,0 +1,2 @@
+numpy==1.26.4
+fiftyone==1.3.2

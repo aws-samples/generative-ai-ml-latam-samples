@@ -1,0 +1,396 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "2024-10-04T04:46:21Z",
+    "title" : "RestApi"
+  },
+  "host" : "2fb3vubeq1.execute-api.us-east-1.amazonaws.com",
+  "basePath" : "/api",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/download" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/download/{folder}" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "folder",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/download/{folder}/{imageFile}" : {
+      "get" : {
+        "consumes" : [ "image/jpeg", "image/png" ],
+        "parameters" : [ {
+          "name" : "Content-Type",
+          "in" : "header",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Accept",
+          "in" : "header",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "imageFile",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "folder",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "ImgIndIndexoKpEk4UWW0rc",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ImgIndIndexoKpEk4UWW0rc"
+          }
+        }, {
+          "in" : "body",
+          "name" : "ImgIndIndex7dQPC81v3HQk",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ImgIndIndex7dQPC81v3HQk"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Content-Type" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ImgIndexStackIndexImgAPIApiGatewayCognitoUserPoolAuthorizer0E74B816" : [ ]
+        } ]
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "folder",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "imageFile",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/indexImage" : {
+      "post" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "ImgIndIndex8CWKhj1jrs7L",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ImgIndIndex8CWKhj1jrs7L"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response"
+          }
+        },
+        "security" : [ {
+          "ImgIndexStackIndexImgAPIApiGatewayCognitoUserPoolAuthorizer0E74B816" : [ ]
+        } ]
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/upload" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/upload/{folder}" : {
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "folder",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/imgMetaIndex/upload/{folder}/{key}" : {
+      "put" : {
+        "consumes" : [ "image/jpeg", "image/png" ],
+        "parameters" : [ {
+          "name" : "Content-Type",
+          "in" : "header",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Accept",
+          "in" : "header",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "folder",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "ImgIndIndexoKpEk4UWW0rc",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ImgIndIndexoKpEk4UWW0rc"
+          }
+        }, {
+          "in" : "body",
+          "name" : "ImgIndIndex7dQPC81v3HQk",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ImgIndIndex7dQPC81v3HQk"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Content-Type" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ImgIndexStackIndexImgAPIApiGatewayCognitoUserPoolAuthorizer0E74B816" : [ ]
+        } ]
+      },
+      "options" : {
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "folder",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "key",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "204 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "ImgIndexStackIndexImgAPIApiGatewayCognitoUserPoolAuthorizer0E74B816" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header",
+      "x-amazon-apigateway-authtype" : "cognito_user_pools"
+    }
+  },
+  "definitions" : {
+    "ImgIndIndex8CWKhj1jrs7L" : {
+      "type" : "object",
+      "required" : [ "key", "metadata" ],
+      "properties" : {
+        "metadata" : {
+          "type" : "object",
+          "properties" : {
+            "node" : {
+              "type" : "string"
+            },
+            "results" : {
+              "type" : "number"
+            },
+            "objective" : {
+              "type" : "string"
+            }
+          },
+          "required" : [ "node", "objective", "results" ]
+        },
+        "key" : {
+          "type" : "string"
+        }
+      },
+      "title" : "IndexImageRequest"
+    },
+    "ImgIndIndex7dQPC81v3HQk" : { },
+    "ImgIndIndexoKpEk4UWW0rc" : { }
+  }
+}

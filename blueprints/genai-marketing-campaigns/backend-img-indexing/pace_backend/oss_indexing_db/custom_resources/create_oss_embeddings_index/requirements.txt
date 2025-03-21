@@ -1,0 +1,6 @@
+cfnresponse
+urllib3<2
+aws-lambda-powertools
+opensearch-py
+requests-aws4auth
+aws-xray-sdk
