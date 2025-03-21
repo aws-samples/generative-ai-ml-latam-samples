@@ -1,20 +1,14 @@
 # Base React App
 
-This repository contains a base web application. It uses [Vite](https://vitejs.dev/) + [React](https://react.dev/). To deploy you will run a basic CDK stack using [Amazon S3](https://aws.amazon.com/s3/) and [Amazon Cloudfront](https://aws.amazon.com/cloudfront/) with [AWS WAF](https://aws.amazon.com/waf/) for security.
+This repository contains a base web application. It uses [Vite](https://vitejs.dev/) + [React](https://react.dev/). For security reasons we do not provide a deployment stack, but you can run it locally.
 
 ## Requirements
 
-In order to run and deploy this project, you need to have installed:
+In order to run this project, you need to have installed:
 
-- AWS CLI. Refer to [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
-- AWS Credentials configured in your environment. Refer to
-  [Configuration and credential file settings](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html)
 - Node >= 18.x.x
-- AWS CDK. Refer to [Getting started with the AWS CDK](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html)
 
 You also need to have the proper backend stack for your prototype deployed into your account, as well as a valid user configured in [Amazon Cognito](https://aws.amazon.com/cognito/).
-
-Make sure to deploy the frontend using the same configuration option as your backend.
 
 ---
 
