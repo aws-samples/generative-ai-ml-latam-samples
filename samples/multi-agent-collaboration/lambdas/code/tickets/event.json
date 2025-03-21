@@ -1,0 +1,22 @@
+{
+    "messageVersion": "1.0",
+    "function": "queryData",
+    "parameters": [
+        {
+            "name": "userQuestion",
+            "type": "string",
+            "value": "What tables are available in the database?"
+        }
+    ],
+    "sessionId": "438465168679150",
+    "agent": {
+        "name": "ask-the-sql-database",
+        "version": "DRAFT",
+        "id": "XXXX",
+        "alias": "TSTALIASID"
+    },
+    "actionGroup": "SQLAgent",
+    "sessionAttributes": {},
+    "promptSessionAttributes": {},
+    "inputText": "que tablas conoces?"
+}

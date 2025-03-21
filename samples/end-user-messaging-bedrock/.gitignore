@@ -9,7 +9,5 @@ __pycache__
 .cdk.staging
 cdk.out
 .vscode
-*.json
-.vscode
 .DS_Store
 *.bkp

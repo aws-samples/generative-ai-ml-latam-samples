@@ -5,13 +5,20 @@ import boto3.dynamodb
 import boto3.dynamodb.table
 
 
-
+BUCKET_NAME = os.environ.get("BUCKET_NAME")
+VOICE_PREFIX = os.environ.get("VOICE_PREFIX", "voice_")
 
 class WhatsappMessage:
     def __init__(
-        self, meta_phone_number, message, metadata = {}, client=None, meta_api_version="v20.0"
+        self,
+        meta_phone_number,
+        message,
+        metadata={},
+        client=None,
+        meta_api_version="v20.0",
     ) -> None:
         # arn:aws:social-messaging:region:account:phone-number-id/976c72a700aac43eaf573ae050example
+        self.meta_phone_number = meta_phone_number
         self.phone_number_arn = meta_phone_number.get("arn", "")
         # phone-number-id-976c72a700aac43eaf573ae050example
         self.phone_number_id = self.phone_number_arn.split(":")[-1].replace("/", "-")
@@ -22,8 +29,51 @@ class WhatsappMessage:
         self.message_id = message.get("id", "")
         self.client = client if client else boto3.client("socialmessaging")
 
+    def add_transcription(self, transcription):
+        self.transcription = transcription
+        self.message["audio"].update({"transcription": transcription})    
+
     def get_text(self):
         return self.message.get("text", {}).get("body", "")
+
+    def get_audio(self, download=True):
+        audio = self.message.get("audio", None)
+
+        if not audio: return {}
+        if not download: return audio
+
+        media_id = audio.get("id")
+
+        media_content = self.download_media(
+            media_id=media_id,
+            phone_id=self.phone_number_id,
+            bucket_name=BUCKET_NAME,
+            media_prefix=VOICE_PREFIX,
+        )
+
+        # print("media content:", media_content)
+        #update self.message.audio with media_content
+        del media_content["ResponseMetadata"]
+        audio.update(media_content)
+        
+
+
+        #update self.message with audio
+        self.message.update({"audio": audio})
+        return audio
+    
+    # https://docs.aws.amazon.com/social-messaging/latest/userguide/receive-message-image.html
+    def download_media(self, media_id, phone_id, bucket_name, media_prefix):
+        media_content = self.client.get_whatsapp_message_media(
+            mediaId=media_id,
+            originationPhoneNumberId=phone_id,
+            destinationS3File={"bucketName": bucket_name, "key": media_prefix},
+        )
+        extension = media_content.get("mimeType","").split("/")[-1]
+        # print("media content:", media_content)
+        return dict(
+            **media_content, location=f"s3://{bucket_name}/{media_prefix}{media_id}.{extension}"
+        )
 
     def mark_as_read(self):
         message_object = {
@@ -75,14 +125,19 @@ class WhatsappMessage:
             metaApiVersion=self.meta_api_version,
             message=bytes(json.dumps(message_object), "utf-8"),
         )
-        print(kwargs)
+        # print(kwargs)
         response = self.client.send_whatsapp_message(**kwargs)
-        print("react to message:", response)
+        print("replied to message:", response)
+        # message_object["id"] = response.get("messageId")
+        # message_object["from"] = self.phone_number
+        # replied_message = WhatsappMessage(self.meta_phone_number, message_object , self.metadata)
+        # return replied_message
 
-    def save(self,table):
+    def save(self, table):
         print("saving message...")
         table.put_item(Item=dict(**self.message, **self.metadata))
-    
+
+
 class WhatsappService:
     def __init__(self, sns_message) -> None:
         self.context = sns_message.get("context", {})
@@ -96,13 +151,16 @@ class WhatsappService:
         for change in self.changes:
             value = change.get("value", {})
             field = change.get("field", "")
-            print(f"field:{field}")
+            # print(f"field:{field}")
             if field == "messages":
                 metadata = value.get("metadata", {})
                 phone_number_id = metadata.get("phone_number_id", "")
                 phone_number = self.get_phone_number_arn(phone_number_id)
                 for message in value.get("messages", []):
-                    self.messages.append(WhatsappMessage(phone_number, message, metadata))
+                    print(f"message: {message}")
+                    self.messages.append(
+                        WhatsappMessage(phone_number, message, metadata)
+                    )
             else:
                 print(f"{value}")
 
@@ -110,4 +168,3 @@ class WhatsappService:
         for phone_number in self.meta_phone_number_ids:
             if phone_number.get("metaPhoneNumberId") == phone_number_id:
                 return phone_number
-            

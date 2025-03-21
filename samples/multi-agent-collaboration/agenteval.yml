@@ -1,0 +1,24 @@
+evaluator:
+  model: claude-3_7-us
+target:
+  type: bedrock-agent
+  bedrock_agent_id: CFWRGZWQQ5
+  bedrock_agent_alias_id: TSTALIASID
+tests:
+  order_information:
+    steps:
+    - Ask agent for order information. 
+      When agent ask for order id, respond with 10020030. If agent ask for identity doc, answer with 12345678-9
+    expected_results:
+    - The agent returns the order data.
+    max_turns: 5
+  problem_with_order:
+    steps:
+    - Say you problem with order 10020030. If agent ask for identity doc, answer with 12345678-9.
+    - Ask for ticket support since is not delivered yet.
+    - Retrieve the ticket status. when asked used same ticket generated in previous step
+    expected_results:
+    - The agent returns order information.
+    - The agent generates a ticket, ticket number like YYYYMMDDhhmmss
+    - The agent returns ticket information
+    max_turns: 7

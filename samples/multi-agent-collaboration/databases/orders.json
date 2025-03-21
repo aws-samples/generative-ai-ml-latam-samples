@@ -1,0 +1,56 @@
+{
+    "Items": [
+        {
+            "order_number": {
+                "S": "10020030"
+            },
+            "identity_document_number": {
+                "S": "12345678-9"
+            },
+            "first_name": {
+                "S": "Enrique"
+            },
+            "last_name": {
+                "S": "Gonzalez"
+            },
+            "phone_number": {
+                "S": "56912345678"
+            },
+            "delivery_date": {
+                "S": "2024-08-06"
+            },
+            "status": {
+                "S": "Despacho Programado"
+            },
+            "shipping_address": {
+                "S": "Calle las acacias 123, Providencia. Region Metropolitana"
+            }
+        },
+        {
+            "order_number": {
+                "S": "10020040"
+            },
+            "identity_document_number": {
+                "S": "44444444-4"
+            },
+            "first_name": {
+                "S": "Carlos"
+            },
+            "last_name": {
+                "S": "Fernandez"
+            },
+            "phone_number": {
+                "S": "56977766888"
+            },
+            "delivery_date": {
+                "S": "2024-08-06"
+            },
+            "status": {
+                "S": "Pendiente Bodega"
+            },
+            "shipping_address": {
+                "S": "Calle las acacias 123, Providencia. Region Metropolitana"
+            }
+        }
+    ]
+}

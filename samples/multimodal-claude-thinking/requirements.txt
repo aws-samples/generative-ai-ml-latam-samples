@@ -1,0 +1,7 @@
+requests
+boto3
+PyPDF2
+pillow
+numpy 
+matplotlib
+scipy

@@ -109,7 +109,7 @@ git clone https://github.com/aws-samples/generative-ai-ml-latam-samples
 
 Set up environment:
 ```bash
-cd pocs/sql-bedrock-agent
+cd samples/sql-bedrock-agent
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows use: .venv\Scripts\activate.bat
 pip install -r requirements.txt

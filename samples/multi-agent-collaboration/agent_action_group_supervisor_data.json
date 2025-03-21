@@ -1,0 +1,10 @@
+[
+    {
+        "action_group_name": "UserInputAction",
+        "parent_action_group_signature": "AMAZON.UserInput"
+    },
+    {
+        "action_group_name": "CodeInterpreterAction",
+        "parent_action_group_signature": "AMAZON.CodeInterpreter"
+    }
+]

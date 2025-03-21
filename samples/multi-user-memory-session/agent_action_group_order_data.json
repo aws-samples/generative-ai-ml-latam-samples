@@ -1,0 +1,35 @@
+[
+    {
+        "action_group_name": "OrdersActionGroup",
+        "description": "Order status",
+        "lambda_": "",
+        "functions": [
+            {
+                "name": "getOrderStatus",
+                "description": "Use this when you need to get the customer's order information",
+                "parameters": [
+                    {
+                        "name": "order_number",
+                        "type": "string",
+                        "description": "8-digit order number. For example 12345678",
+                        "required": 1
+                    },
+                    {
+                        "name": "identity_document_number",
+                        "type": "string",
+                        "description": "customer identity_document_number as 8 consecutive digits, a dash and a character (K or digit)",
+                        "required": 1
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "action_group_name": "UserInputAction",
+        "parent_action_group_signature": "AMAZON.UserInput"
+    },
+    {
+        "action_group_name": "CodeInterpreterAction",
+        "parent_action_group_signature": "AMAZON.CodeInterpreter"
+    }
+]

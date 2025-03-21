@@ -14,7 +14,7 @@ LAMBDA_TIMEOUT = 900
 
 BASE_LAMBDA_CONFIG = dict(
     timeout=Duration.seconds(LAMBDA_TIMEOUT),
-    memory_size=128,
+    memory_size=512,
     
     runtime=aws_lambda.Runtime.PYTHON_3_13,
     architecture=aws_lambda.Architecture.ARM_64,
@@ -22,7 +22,7 @@ BASE_LAMBDA_CONFIG = dict(
 )
 
 
-from layers import Boto3_1_35_69
+from layers import Boto3_1_35_69, TranscribeClient
 
 class Lambdas(Construct):
     def __init__(
@@ -30,6 +30,7 @@ class Lambdas(Construct):
         super().__init__(scope, construct_id, **kwargs)
         
         BotoLayer = Boto3_1_35_69(self, "Boto3_1_35_69")
+        TranscribeLayer = TranscribeClient(self, "TranscribeLayer")
 
         # ======================================================================
         # Lambda Envia la notificación al topoc
@@ -39,7 +40,7 @@ class Lambdas(Construct):
             "WABAEventHandler",
             code=aws_lambda.Code.from_asset("./lambdas/code/whatsapp_event_handler/"),
             handler="lambda_function.lambda_handler",
-            layers=[BotoLayer.layer],
+            layers=[BotoLayer.layer, TranscribeLayer.layer],
             **BASE_LAMBDA_CONFIG,
         )
 
