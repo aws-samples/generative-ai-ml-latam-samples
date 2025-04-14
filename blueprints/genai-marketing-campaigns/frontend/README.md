@@ -2,7 +2,7 @@
 
 This repository contains a web application (frontend) for the GenAI-based marketing campaign creation assistance use-case.
 
-It was built with [Vite](https://vitejs.dev/) + [React](https://react.dev/). For security reasons we do not provide a deployment stack but you can run it locally.
+It was built with [Vite](https://vitejs.dev/) + [React](https://react.dev/). For security reasons we do not provide a deployment stack, but you can run it locally.
 
 The UI has a wizard-like interface for step-by-step campaign creation and help you with meta-prompting and will look like the one bellow.
 
@@ -12,7 +12,7 @@ Just read the instructions for each step and wait for the results. At the end th
 
 ## Requirements
 
-In order to run and deploy this project, you need to have installed:
+In order to run this project, you need to have installed:
 
 - Node >= 18.x.x
 
