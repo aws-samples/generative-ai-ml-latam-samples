@@ -1,6 +1,0 @@
-{
-  "LOG_LEVEL": "DEBUG",
-  "CAMPAIGN_TABLE_NAME": "MarketingCampaignsStack-CampaignsTableC0F6C4C0-5KCC64DGKF6B",
-  "REGION": "us-east-1",
-  "MODEL_ID": "anthropic.claude-3-haiku-20240307-v1:0"
-}
