@@ -33,14 +33,16 @@ $ cd webapp/
 Inside the `webapp/` folder, create a file named `.env`. Copy the environment displayed below and replace the property values with the outputs from your deployed backend stack.
 
 ```properties
-VITE_AWS_REGION="<REGION_NAME>"
-VITE_COGNITO_USER_POOL_ID="<COGNITO_USER_POOL_ID>"
-VITE_COGNITO_USER_POOL_CLIENT_ID="<COGNITO_USER_POOL_CLIENT_ID>"
-VITE_COGNITO_IDENTITY_POOL_ID="<COGNITO_IDENTITY_POOL_ID>"
-VITE_API_GATEWAY_REST_API_ENDPOINT="<API_GATEWAY_REST_API_ENDPOINT>"
+VITE_AWS_REGION="<<ImgGenerationStack.RegionName>>"
+VITE_COGNITO_USER_POOL_ID="<<ImgGenerationStack.CognitoUserPoolIdXXXXX>>"
+VITE_COGNITO_USER_POOL_CLIENT_ID="<<ImgGenerationStack.CognitoUserPoolClientIdXXXXXX>>"
+VITE_COGNITO_IDENTITY_POOL_ID="<<ImgGenerationStack.CognitoIdentityPoolIdXXXXXX>>"
+VITE_API_GATEWAY_REST_API_ENDPOINT="<<ImgGenerationStack.ApiGatewayRestApiEndpointXXXXXX>>"
 VITE_API_NAME="<API_NAME>"
-VITE_APP_NAME="GenAI Marketing Campaigns"
+VITE_APP_NAME="<APP_NAME>"
 ```
+
+**Note:** The values for the inputs in-between < > signs are user defined inputs while the ones in-between << >> come from another stack.
 
 ### Developing with dev mode
 
