@@ -16,7 +16,7 @@ To successfully deploy and run this stack you must:
 * Python >= 3.10
 * Have deployed the **OpenSearch Roles Creation**
 * Have deployed the **Previous Campaigns Indexing Stack**
-* Have [access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to the Claude 3.5 Sonnet, Titan Multimodal Embeddings, and Titan Image Generation V2 models
+* Have [access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to the Amazon Nova Pro, Titan Multimodal Embeddings, and Amazon Nova Canvas models
 
 ## Setup
 
@@ -76,7 +76,7 @@ The following diagram illustrates the services and infrastructure being deployed
 
 ![architecture](architecture_img_generation.png)
 
-1. [Amazon Bedrock](https://aws.amazon.com/bedrock/) is used to invoke the Anthropic's Claude 3, Amazon Titan Multimodal Embeddings, and Amazon Titan Image Generator models using a common API.
+1. [Amazon Bedrock](https://aws.amazon.com/bedrock/) is used to invoke the Amazon Nova Pro, Amazon Titan Multimodal Embeddings, and Amazon Nova Canvas models using a common API.
 2. [Amazon Lambda](https://aws.amazon.com/lambda/) functions are used to create meta-prompts, generate images, retrieve related images and store the campaign in a database.
 3. The campaign's information is stored in an [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) database.
 4. APIs are managed using [Amazon API Gateway](https://aws.amazon.com/api-gateway/).
