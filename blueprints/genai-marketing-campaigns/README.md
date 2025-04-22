@@ -1,4 +1,4 @@
-gst# Next generation marketing campaigns with Amazon Nova 
+# Next generation marketing campaigns with Amazon Nova 
 
 ## Overview
 
