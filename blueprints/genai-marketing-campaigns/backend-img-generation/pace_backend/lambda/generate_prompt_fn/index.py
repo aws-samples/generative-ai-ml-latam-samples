@@ -44,7 +44,6 @@ logger.setLevel(os.getenv("LOG_LEVEL"))
 langchain_core.globals.set_debug(True)
 
 CAMPAIGN_TABLE_NAME = os.getenv("CAMPAIGN_TABLE_NAME")
-REGION = os.getenv("REGION")
 MODEL_ID = os.getenv("MODEL_ID")
 
 campaignTable = boto3.resource("dynamodb").Table(CAMPAIGN_TABLE_NAME)

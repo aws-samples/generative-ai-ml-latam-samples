@@ -44,16 +44,17 @@ CAMPAIGN_TABLE_NAME = os.getenv("CAMPAIGN_TABLE_NAME")
 campaignTable = boto3.resource("dynamodb").Table(CAMPAIGN_TABLE_NAME)
 
 PROCESSED_BUCKET = os.getenv("PROCESSED_BUCKET")
-
+REGION = os.getenv("REGION")
 MODEL_ID = os.getenv("IMG_MODEL_ID")
 
-#s3 = boto3.client("s3")
+logger.info(f"REGION: {REGION}")
+
 s3 = boto3.resource("s3")
 processed_bucket = s3.Bucket(PROCESSED_BUCKET)
 
 bedrock_runtime = boto3.client(
     service_name="bedrock-runtime",
-    region_name="us-east-1"
+    region_name=REGION
 )
 
 def genImgCanvas(prompt: str):
