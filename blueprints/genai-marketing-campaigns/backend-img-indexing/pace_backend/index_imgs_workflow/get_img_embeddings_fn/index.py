@@ -28,11 +28,14 @@ logger.setLevel(os.getenv("LOG_LEVEL"))
 
 IMG_BUCKET = os.getenv("IMG_BUCKET")
 
-REGION = boto3.session.Session().region_name
+REGION = os.getenv("REGION")
+
+logger.info(f"REGION: {REGION}")
+
 s3 = boto3.client('s3')
 bedrock_runtime = boto3.client(
     service_name="bedrock-runtime",
-    region_name="us-east-1"
+    region_name=REGION
 )
 
 lambda_response = {

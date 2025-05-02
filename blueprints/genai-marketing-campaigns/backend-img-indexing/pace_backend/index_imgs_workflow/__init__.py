@@ -109,7 +109,8 @@ class IndexImgWorkflow(Construct):
             memory_size=128,
             environment={
                 "LOG_LEVEL": "DEBUG",
-                "IMG_BUCKET": imgs_bucket.bucket_name
+                "IMG_BUCKET": imgs_bucket.bucket_name,
+                "REGION":  Stack.of(self).region
             },
         )
 
