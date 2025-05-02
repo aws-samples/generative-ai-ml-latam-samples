@@ -69,7 +69,7 @@ def put_img(url, local_path, filename, token):
         timeout=30
     )
 
-    print(response)
+    return response
 
 
 def process_img(url, filename, token):
@@ -100,7 +100,7 @@ def process_img(url, filename, token):
         timeout=30
     )
 
-    print(response)
+    return response
 
 
 if __name__ == '__main__':
@@ -133,11 +133,16 @@ if __name__ == '__main__':
         print(image_file)
         filename = image_file.split("/")[-1]
         print(filename)
-        put_img(api_url, image_file, filename, bearer_token)
+        response = put_img(api_url, image_file, filename, bearer_token)
+
+        if response.status_code != 200:
+            raise Exception(f"Error uploading image {filename} due to {response.status_code} {response.reason}")
 
         print("Image uploaded")
+        response = process_img(api_url, filename, bearer_token)
 
-        process_img(api_url, filename, bearer_token)
+        if response.status_code != 200:
+            raise Exception(f"Error processing image {filename} due to {response.status_code} {response.reason}")
 
         print("Image processed")
 
