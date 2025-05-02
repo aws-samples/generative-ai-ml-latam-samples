@@ -71,6 +71,14 @@ To deploy this project, follow the instructions available in the README files of
 3. backend-img-generation: This will deploy the assets for the visuals generation workflow
 4. frontend: This will run the UI to interact with the application
 
+**Note:** Please make sure the following models are available in your region of deployment
+
+* Amazon Nova Canvas
+* Amazon Nova Pro
+* Amazon Tiitan Multimodal Embeddings
+
+You can review the availability of models by regions in: [https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html](https://docs.aws.amazon.com/bedrock/latest/userguide/models-regions.html)
+
 ## Security Guideline
 Please see the [security guidelines](readme_assets/security.md#security).
 
