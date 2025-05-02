@@ -46,7 +46,7 @@ class IndexImgAPI(Construct):
         # Create cognito user pool to authenticate APIs
         self.cognito = pace.PACECognito(
             self,
-            "Cognito",
+            "IndexImgCognito",
             region=Stack.of(self).region,
         )
 

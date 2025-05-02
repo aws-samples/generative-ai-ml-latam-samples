@@ -113,12 +113,12 @@ class PACEBackendStack(Stack):
         # Default resources
         self.cognito = pace.PACECognito(
             self,
-            "Cognito",
+            "ImgGenCognito",
             region=self.region,
         )
         self.apigw = pace.PACEApiGateway(
             self,
-            "ApiGateway",
+            "ImgGenApiGateway",
             region=self.region,
             user_pool=self.cognito.user_pool,
         )
@@ -351,7 +351,7 @@ class PACEBackendStack(Stack):
                 "HISTORIC_TABLE_NAME": self.historicCampaignsTable.table_name,
                 "OSS_HOST": oss_collection_host.value_as_string,
                 "OSS_EMBEDDINGS_INDEX_NAME": oss_embeddings_index_name.value_as_string,
-                "REGION": self.region,
+                "REGION": Stack.of(self).region
             },
         )
         self.campaignsTable.grant_read_data(self.generate_recommendations_fn.role)
@@ -407,8 +407,7 @@ class PACEBackendStack(Stack):
             environment={
                 "LOG_LEVEL": "DEBUG",
                 "CAMPAIGN_TABLE_NAME": self.campaignsTable.table_name,
-                "MODEL_ID": "us.amazon.nova-pro-v1:0",
-                "REGION": self.region
+                "MODEL_ID": "us.amazon.nova-pro-v1:0"
             },
         )
         self.campaignsTable.grant_read_data(self.generate_prompt_fn.role)
@@ -498,7 +497,8 @@ class PACEBackendStack(Stack):
                 "HISTORIC_TABLE_NAME": self.historicCampaignsTable.table_name,
                 "PROCESSED_BUCKET": self.processedBucket.bucket_name,
                 "RAW_IMG_BUCKET": self.rawImgBucket.bucket_name,
-                "IMG_MODEL_ID": "amazon.nova-canvas-v1:0"
+                "IMG_MODEL_ID": "amazon.nova-canvas-v1:0",
+                "REGION": Stack.of(self).region
             },
             initial_policy=[
                 iam.PolicyStatement(
