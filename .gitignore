@@ -6,6 +6,9 @@
 *checkpoint.py
 *checkpoint.ipynb
 
+# cdk output files
+cdk.out/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

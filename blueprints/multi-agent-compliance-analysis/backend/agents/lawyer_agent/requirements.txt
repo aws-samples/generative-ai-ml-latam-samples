@@ -1,0 +1,14 @@
+strands-agents>=1.5
+strands-agents-tools
+boto3>=1.28.0
+botocore>=1.31.0
+langchain-aws>=0.2.26
+langchain-core>=0.3.66
+langchain>=0.3.26
+opensearch-py
+aws-lambda-powertools
+bedrock-agentcore
+fastapi
+uvicorn[standard]
+httpx
+pydantic

@@ -1,0 +1,20 @@
+[project]
+name = "writer-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aws-lambda-powertools>=3.19.0",
+    "bedrock-agentcore>=0.1.2",
+    "boto3>=1.40.17",
+    "botocore>=1.40.17",
+    "fastapi>=0.116.1",
+    "httpx>=0.28.1",
+    "langchain>=0.3.27",
+    "langchain-aws>=0.2.31",
+    "langchain-core>=0.3.74",
+    "pydantic>=2.11.7",
+    "strands-agents>=1.5.0",
+    "uvicorn[standard]>=0.35.0",
+]

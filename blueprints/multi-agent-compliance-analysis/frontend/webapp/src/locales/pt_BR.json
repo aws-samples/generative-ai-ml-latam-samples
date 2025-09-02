@@ -1,0 +1,41 @@
+{
+  "helloWorld": {
+    "title": "Hello World",
+    "subtitle": "Bem-vindo ao seu novo projeto!",
+    "description": "Este é um projeto base limpo com autenticação AWS Amplify e internacionalização configurada.",
+    "languageSelect": "Escolha o idioma:",
+    "features": {
+      "title": "Recursos incluídos:",
+      "auth": "Autenticação AWS Amplify/Cognito",
+      "i18n": "Internacionalização (PT, EN, ES)",
+      "ui": "Componentes UI (shadcn/ui)",
+      "routing": "Roteamento React Router",
+      "styling": "Styling com Tailwind CSS"
+    }
+  },
+  "app": {
+    "title": "AnalysisHub"
+  },
+  "navbar": {
+    "home": "Início"
+  },
+  "language": {
+    "changeLanguage": "Mudar Idioma"
+  },
+  "user": {
+    "loggedInAs": "Conectado como {{username}}",
+    "menu": "Menu do Usuário",
+    "logout": "Sair"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "close": "Fechar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "back": "Voltar",
+    "next": "Avançar",
+    "tryAgain": "Tentar Novamente"
+  }
+}
