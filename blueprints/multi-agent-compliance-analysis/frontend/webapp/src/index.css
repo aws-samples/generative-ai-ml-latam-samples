@@ -1,0 +1,181 @@
+/* Copyright 2025 Amazon.com, Inc. or its affiliates. All Rights Reserved.]
+   SPDX-License-Identifier: LicenseRef-.amazon.com.-AmznSL-1.0
+   Licensed under the Amazon Software License  http://aws.amazon.com/asl/ */
+
+@import "@aws-amplify/ui-react/styles.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Scrollbar */
+
+:root {
+  --scrollbar-thumb-color: rgb(29, 78, 216);
+  --scrollbar-track-color: transparent;
+  --scrollbar-border-color: #e5e7eb;
+  --scrollbar-border-color-dark: rgb(15, 23, 42);
+}
+
+*::-webkit-scrollbar {
+  @apply w-5;
+}
+
+*::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply rounded-full border-8 border-solid bg-slate-300;
+}
+
+@media (prefers-color-scheme: dark) {
+  *::-webkit-scrollbar-thumb {
+    @apply border-slate-900;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  *::-webkit-scrollbar-thumb {
+    @apply border-white;
+  }
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+
+    --primary: 220.9 39.3% 11%;
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 210 20% 98%;
+    --primary-foreground: 220.9 39.3% 11%;
+
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 216 12.2% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  /* Hide scrollbars globally */
+  html, body {
+    @apply bg-background text-foreground;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    height: 100%;
+    overflow: hidden; /* Prevent scrolling on main page */
+  }
+  
+  html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+  
+  /* Ensure root container takes full height */
+  #root {
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Prevent horizontal overflow on small screens */
+  .container {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure all text content respects container boundaries */
+  * {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+  
+  /* Force all containers to respect viewport width */
+  body, #root, main, .container {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+/* Amplify Theming */
+
+[data-amplify-authenticator] {
+  height: 100vh;
+
+  [data-amplify-router] {
+    @apply rounded-xl;
+  }
+
+  [data-amplify-form] {
+    .amplify-button--primary {
+      @apply rounded-full bg-gray-600 px-4 py-2 text-sm font-medium text-gray-50 hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 disabled:bg-slate-500 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 sm:text-base;
+    }
+  }
+
+  [data-amplify-footer] {
+    .amplify-button--link {
+      @apply text-gray-800;
+    }
+  }
+}

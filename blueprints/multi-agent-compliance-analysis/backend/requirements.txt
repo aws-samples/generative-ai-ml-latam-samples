@@ -1,0 +1,11 @@
+aws-cdk-lib==2.174.1
+aws_cdk.aws_lambda_python_alpha==2.174.1a0
+constructs>=10.0.0,<11.0.0
+aws-cdk-aws-pipes-alpha
+aws-cdk-aws-pipes-sources-alpha
+aws-cdk-aws-pipes-targets-alpha
+cdk_nag
+cdklabs.generative-ai-cdk-constructs
+bedrock-agentcore
+bedrock-agentcore-starter-toolkit
+retrying

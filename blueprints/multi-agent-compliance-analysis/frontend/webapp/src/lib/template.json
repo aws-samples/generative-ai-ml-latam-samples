@@ -1,0 +1,77 @@
+{
+  "job_id": "<JOB_ID>",
+  "report_template": {
+    "Cloud provider": {
+      "order": 1,
+      "description": "Defines the cloud service(s) to be contracted. Specifies information such as cloud provider, cloud type, service type, regions or locations where the service is provided."
+    },
+    "Services to be contracted": {
+      "order": 2,
+      "description": "List and description of the services to be contracted that will be provided by the cloud provider."
+    },
+    "Risk assessment report": {
+      "order": 3,
+      "description": "Report with the evaluation of risks (operational and technological) of contracting the third party. Includes but is not limited to: \n        a) Identification of business processes and functions, related to the importance, criticality of systems and critical components to be contracted.\n        b) Identification of shared responsibility for the services to be contracted.\n        c) Periodicity of risk assessment regarding the Provider's services.\n        d) Risks identified from contracting cloud services in the case of authorization, such as geographical risks, legal system, concentration risk, among others."
+    },
+    "Architecture diagram": {
+      "order": 4,
+      "description": "The architecture diagram of the service intended to be contracted"
+    },
+    "Telecommunications diagram": {
+      "order": 5,
+      "description": "The telecommunications diagram of the service intended to be contracted"
+    },
+    "Information to be handled with the provider": {
+      "order": 6,
+      "description": "List information that will be stored permanently or temporarily. The information doesn't need to be at the data dictionary level, but sufficient to provide visibility of what data is sent."
+    },
+    "Information encryption": {
+      "order": 7,
+      "description": "Information related to data protection. Encryption at rest, encryption in transit, mechanisms, protocols"
+    },
+    "Access control": {
+      "order": 8,
+      "description": "Description of access controls to the services subject to this authorization (e.g., creation of access levels and profiles).\n        Include policies for access management, including robust password construction (composition, session validity time, etc.)"
+    },
+    "Secure deletion": {
+      "order": 9,
+      "description": "Information on information deletion policies"
+    },
+    "Vulnerability testing": {
+      "order": 10,
+      "description": "Information on mechanisms to mitigate vulnerabilities"
+    },
+    "Incident management": {
+      "order": 11,
+      "description": "Information on how operational, security, etc. incidents are managed and mitigated"
+    },
+    "Provider continuity plan": {
+      "order": 12,
+      "description": "Description of the provider's continuity plan"
+    },
+    "Information backups": {
+      "order": 13,
+      "description": "Information about backups and how they are performed"
+    },
+    "Monitoring and service quality": {
+      "order": 14,
+      "description": "Details on service monitoring techniques and how quality is measured"
+    },
+    "Functions of the Institution's Security Officer": {
+      "order": 15,
+      "description": "Includes but is not limited to:\n        a) Authorization and supervision over user administration, both in Mexico and abroad\n        b) Mechanisms to access system logs or applications when required\n        c) Periodic monitoring of access logs to the Entity's information\n        d) Control and monitoring of access to computer systems and information generated, received, transmitted, processed or stored in such systems; as well as logs, databases and security configurations established for this purpose, from the facilities in national territory of the contracting Entity.\n        e) Take into account that the CISO must have at all times the records of people with access to information about the institution's operations"
+    },
+    "Technical support scheme contracted with the provider": {
+      "order": 16,
+      "description": "Details about the technical support scheme contracted with the provider"
+    },
+    "Provider audit procedures": {
+      "order": 17,
+      "description": "Information about the audit procedures for the service provider"
+    },
+    "Access logs": {
+      "order": 18,
+      "description": "Details about logs, metrics and logs used for operation monitoring"
+    }
+  }
+}

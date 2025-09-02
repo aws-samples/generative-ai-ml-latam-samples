@@ -1,0 +1,37 @@
+{
+	"job_id": "<JOB_ID>",
+	"report_template": {
+		"Cloud provider": {
+			"order": 1,
+			"description": "Defines the cloud service(s) to be contracted. Specifies information such as cloud provider, cloud type, service type, regions or locations where the service is provided."
+		},
+		"Information encryption": {
+			"order": 2,
+			"description": "Information related to data protection. Encryption at rest, encryption in transit, mechanisms, protocols."
+		},
+		"Access control": {
+			"order": 3,
+			"description": "Description of access controls for services subject to this authorization (e.g., creation of access levels and profiles). Include access management policies, including those for creating robust passwords (composition, session validity period, etc.)."
+		},
+		"Secure deletion": {
+			"order": 4,
+			"description": "Information about data deletion policies."
+		},
+		"Vulnerability testing": {
+			"order": 5,
+			"description": "Information about mechanisms to mitigate vulnerabilities."
+		},
+		"Information backups": {
+			"order": 6,
+			"description": "Information about backups and how they are performed."
+		},
+		"Monitoring and service quality": {
+			"order": 7,
+			"description": "Details about service monitoring techniques and how quality is measured."
+		},
+		"Access logs": {
+			"order": 8,
+			"description": "Details about logs and metrics used for operation monitoring."
+		}
+	}
+}

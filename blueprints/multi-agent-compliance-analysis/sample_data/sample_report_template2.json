@@ -1,0 +1,13 @@
+{
+	"job_id": "<JOB_ID>",
+	"report_template": {
+		"Cloud provider": {
+			"order": 1,
+			"description": "Defines the cloud service(s) to be contracted. Specifies information such as cloud provider, cloud type, service type, regions or locations where the service is provided."
+		},
+		"Information encryption": {
+			"order": 2,
+			"description": "Information related to data protection. Encryption at rest, encryption in transit, mechanisms, protocols."
+		}
+	}
+}
