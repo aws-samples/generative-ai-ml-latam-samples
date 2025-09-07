@@ -51,6 +51,12 @@ Here is a list of available samples:
   * Novel tecniques implementations
   * May include Cloudformation / CDK
 
+Here is a list of available proofs of concept:
+
+| Use Case                                                                          | Industry                                | Description                                                                                                                                                                                                                  | Type              | Languages        |
+|-----------------------------------------------------------------------------------|-----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|------------------|
+| [Meta knowledge retrieval for LLMs knowledge bases](./proof_of_concept/meta_knowledge_retrieval_for_knowledge_bases/README.md)                    | Cross Industry | A reference implementation for efficient knowledge bases that exploit metadata and a Q&A chunking strategy for efficient information retrieval. Based on ["Meta Knowledge for Retrieval Augmented Large Language Models"](https://www.amazon.science/publications/meta-knowledge-for-retrieval-augmented-large-language-models)  | CDK/Python        | Multilanguage |
+
 ## Contributing
 
 Please refer to the [CONTRIBUTING](CONTRIBUTING.md) document for further details on contributing to this repository. 
