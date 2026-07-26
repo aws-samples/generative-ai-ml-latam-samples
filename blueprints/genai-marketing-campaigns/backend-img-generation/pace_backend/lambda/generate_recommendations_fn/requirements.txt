@@ -1,3 +1,2 @@
 boto3
-langchain
-opensearch-py
+opensearch-py==2.8.0

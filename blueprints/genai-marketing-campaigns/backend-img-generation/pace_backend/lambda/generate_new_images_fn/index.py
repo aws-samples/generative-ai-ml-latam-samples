@@ -46,8 +46,14 @@ campaignTable = boto3.resource("dynamodb").Table(CAMPAIGN_TABLE_NAME)
 PROCESSED_BUCKET = os.getenv("PROCESSED_BUCKET")
 REGION = os.getenv("REGION")
 MODEL_ID = os.getenv("IMG_MODEL_ID")
+# Provider selects the invoke-body/response adapter. Defaults to "stability"
+# (Nova Canvas reached Bedrock EOL 2026-09-30). Kept as a config knob so a
+# future model swap is an env change, not a code change.
+IMG_PROVIDER = os.getenv("IMG_PROVIDER", "stability")
+# Aspect ratio replaces Nova's pixel dims. "16:9" matches the original 1280x720 intent.
+IMG_ASPECT_RATIO = os.getenv("IMG_ASPECT_RATIO", "16:9")
 
-logger.info(f"REGION: {REGION}")
+logger.info(f"REGION: {REGION} | MODEL_ID: {MODEL_ID} | PROVIDER: {IMG_PROVIDER}")
 
 s3 = boto3.resource("s3")
 processed_bucket = s3.Bucket(PROCESSED_BUCKET)
@@ -57,32 +63,66 @@ bedrock_runtime = boto3.client(
     region_name=REGION
 )
 
-def genImgCanvas(prompt: str):
-    """Generate an image from a prompt using Amazon Titan models"""
+NEGATIVE_PROMPTS = "poorly rendered, poor background details, poorly facial details"
 
-    negative_prompts = "poorly rendered, poor background details, poorly facial details"
 
-    seed = int(random.randrange(0x0CCD569F))  # nosec B311 not being used for security
-    logger.debug("seed = " + str(seed))
+class ImageFilteredError(Exception):
+    """Raised when the model's content filter blocked generation (no image returned)."""
 
-    # Create payload
-    body = json.dumps(
+
+def _build_stability_body(prompt: str, seed: int) -> str:
+    """Invoke body for Stability AI models (Stable Image Ultra/Core, SD3.5)."""
+    return json.dumps(
+        {
+            "prompt": prompt,
+            "negative_prompt": NEGATIVE_PROMPTS,  # plain keywords, no negation words
+            "aspect_ratio": IMG_ASPECT_RATIO,     # replaces explicit pixel dims
+            "seed": seed,
+            "output_format": "jpeg",
+        }
+    )
+
+
+def _build_nova_canvas_body(prompt: str, seed: int) -> str:
+    """Invoke body for Amazon Nova Canvas (legacy; retained for fallback/parity)."""
+    return json.dumps(
         {
             "taskType": "TEXT_IMAGE",
             "textToImageParams": {
                 "text": prompt,
-                "negativeText": negative_prompts   # Optional
+                "negativeText": NEGATIVE_PROMPTS,
             },
             "imageGenerationConfig": {
-                "numberOfImages": 1,  # Range: 1 to 5
-                "quality": "standard",  # Options: standard or premium
-                "height": 720,  # Supported height list in the docs
-                "width": 1280,  # Supported width list in the docs
-                "cfgScale": 7.5,  # Range: 1.0 (exclusive) to 10.0
-                "seed": seed  # Range: 0 to 214783647
-            }
+                "numberOfImages": 1,
+                "quality": "standard",
+                "height": 720,
+                "width": 1280,
+                "cfgScale": 7.5,
+                "seed": seed,
+            },
         }
     )
+
+
+# provider -> body builder. Both providers return the generated image(s) under
+# the same "images" key, so response handling is shared below.
+_BODY_BUILDERS = {
+    "stability": _build_stability_body,
+    "nova_canvas": _build_nova_canvas_body,
+}
+
+
+def genImgCanvas(prompt: str):
+    """Generate an image from a prompt via the configured Bedrock image provider."""
+
+    seed = int(random.randrange(0x0CCD569F))  # nosec B311 not being used for security
+    logger.debug("seed = " + str(seed))
+
+    build_body = _BODY_BUILDERS.get(IMG_PROVIDER)
+    if build_body is None:
+        raise ValueError(f"Unsupported IMG_PROVIDER: {IMG_PROVIDER}")
+
+    body = build_body(prompt, seed)
 
     response = bedrock_runtime.invoke_model(
         body=body,
@@ -92,7 +132,19 @@ def genImgCanvas(prompt: str):
     )
     response_body = json.loads(response.get("body").read())
 
-    base_64_img_str = response_body["images"][0]
+    # Stability omits "images" and returns "finish_reasons" when a prompt is
+    # blocked by the content filter. Nova returned an image unconditionally, so
+    # this guard is new and required for the migration.
+    images = response_body.get("images")
+    if not images:
+        finish_reasons = response_body.get("finish_reasons") or response_body.get("finish_reason")
+        logger.warning(f"No image returned. finish_reasons={finish_reasons}")
+        raise ImageFilteredError(
+            "The prompt was blocked by the model's content filter. "
+            "Please adjust the campaign description and try again."
+        )
+
+    base_64_img_str = images[0]
 
     tmpdir = tempfile.mkdtemp()
     image_file = str(uuid.uuid4()) + ".jpg"
@@ -130,7 +182,12 @@ def handler(event, context):
         return lambda_response
 
     #Generate an image based on the prompt
-    image_path, image_file = genImgCanvas(prompt)
+    try:
+        image_path, image_file = genImgCanvas(prompt)
+    except ImageFilteredError as e:
+        lambda_response["statusCode"] = 400
+        lambda_response["body"] = json.dumps({"message": str(e)})
+        return lambda_response
 
     #Read dynamo table
     ans = campaignTable.get_item(Key={'id':uid})

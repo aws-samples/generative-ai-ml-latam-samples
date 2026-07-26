@@ -33,20 +33,26 @@ Amplify.configure({
   },
 });
 
-const session = await fetchAuthSession();
-const authToken = session.tokens?.idToken?.toString();
-
-const defaultRestInput = {
-  apiName: env.VITE_API_NAME,
-  options: {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
+// Fetch a fresh auth token per request. Doing this once at module load runs
+// before the user has authenticated, so the token is undefined and every call
+// goes out as "Bearer undefined" -> 401. Amplify caches/refreshes the session,
+// so calling fetchAuthSession() per request is cheap.
+async function buildRestInput() {
+  const session = await fetchAuthSession();
+  const authToken = session.tokens?.idToken?.toString();
+  return {
+    apiName: env.VITE_API_NAME,
+    options: {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     },
-  },
-};
+  };
+}
 
 export async function getCampaigns() {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = get({
       ...defaultRestInput,
       path: "/campaigns",
@@ -60,6 +66,7 @@ export async function getCampaigns() {
 
 export async function getCampaign(campaignId: string) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = get({
       ...defaultRestInput,
       path: `/campaigns/${campaignId}`,
@@ -73,6 +80,7 @@ export async function getCampaign(campaignId: string) {
 
 export async function createCampaign(campaign: Campaign) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = post({
       ...defaultRestInput,
       path: `/campaigns`,
@@ -90,6 +98,7 @@ export async function createCampaign(campaign: Campaign) {
 
 export async function deleteCampaign(campaignId: string) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = del({
       ...defaultRestInput,
       path: `/campaigns/${campaignId}`,
@@ -102,6 +111,7 @@ export async function deleteCampaign(campaignId: string) {
 
 export async function getReferences(campaignId: string) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = post({
       ...defaultRestInput,
       path: `/references/${campaignId}`,
@@ -115,6 +125,7 @@ export async function getReferences(campaignId: string) {
 
 export async function getPresignedImageUrl(s3path: string) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = post({
       ...defaultRestInput,
       path: `/presign`,
@@ -134,6 +145,7 @@ export async function getPresignedImageUrl(s3path: string) {
 
 export async function getSuggestion(campaignId: string, references: string[]) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = post({
       ...defaultRestInput,
       path: `/suggestion/${campaignId}`,
@@ -151,6 +163,7 @@ export async function getSuggestion(campaignId: string, references: string[]) {
 
 export async function getGeneratedImage(campaignId: string, prompt: string) {
   try {
+    const defaultRestInput = await buildRestInput();
     const restOperation = post({
       ...defaultRestInput,
       path: `/generate_images/${campaignId}`,

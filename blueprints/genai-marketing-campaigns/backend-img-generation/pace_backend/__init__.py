@@ -93,7 +93,7 @@ class PACEBackendStack(Stack):
         oss_data_access_role.add_to_principal_policy(
             iam.PolicyStatement(
                 actions=["aoss:DashboardsAccessAll"],
-                resources=[f'arn:aws:aoss:us-east-1:{Stack.of(self).account}:dashboards/default'],
+                resources=[f'arn:aws:aoss:{Stack.of(self).region}:{Stack.of(self).account}:dashboards/default'],
                 effect=iam.Effect.ALLOW,
             )
         )
@@ -489,7 +489,7 @@ class PACEBackendStack(Stack):
             index="index.py",
             handler="handler",
             runtime=lambda_.Runtime.PYTHON_3_13,
-            timeout=Duration.seconds(30),
+            timeout=Duration.seconds(90),
             memory_size=128,
             environment={
                 "LOG_LEVEL": "DEBUG",
@@ -497,7 +497,12 @@ class PACEBackendStack(Stack):
                 "HISTORIC_TABLE_NAME": self.historicCampaignsTable.table_name,
                 "PROCESSED_BUCKET": self.processedBucket.bucket_name,
                 "RAW_IMG_BUCKET": self.rawImgBucket.bucket_name,
-                "IMG_MODEL_ID": "amazon.nova-canvas-v1:0",
+                # Nova Canvas reached Bedrock EOL 2026-09-30; migrated to Stability
+                # AI Stable Image Ultra (us-west-2 only). Swap IMG_MODEL_ID +
+                # IMG_PROVIDER together to change providers (see generate_new_images_fn).
+                "IMG_MODEL_ID": "stability.stable-image-ultra-v1:1",
+                "IMG_PROVIDER": "stability",
+                "IMG_ASPECT_RATIO": "16:9",
                 "REGION": Stack.of(self).region
             },
             initial_policy=[

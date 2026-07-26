@@ -15,7 +15,24 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from langchain.chains.prompt_selector import ConditionalPromptSelector
+# Minimal, dependency-stable replacement for
+# langchain.chains.prompt_selector.ConditionalPromptSelector. That module has
+# moved/broken across langchain releases (unpinned deps -> ImportError at
+# runtime); this local shim reproduces the exact get_prompt() semantics and
+# removes the fragile dependency.
+from typing import Callable, List, Tuple
+
+
+class ConditionalPromptSelector:
+    def __init__(self, default_prompt, conditionals: List[Tuple[Callable, object]] = None):
+        self.default_prompt = default_prompt
+        self.conditionals = conditionals or []
+
+    def get_prompt(self, model_id: str):
+        for condition, prompt in self.conditionals:
+            if condition(model_id):
+                return prompt
+        return self.default_prompt
 
 from .prompts import NOVA_AD_CONCEPT_SYSTEM_PROMPT_EN, NOVA_AD_CONCEPT_USER_PROMPT_EN
 

@@ -107,7 +107,7 @@ class OpenSearchServerlessEmbeddingsIndex(Construct):
         oss_data_indexing_role.add_to_principal_policy(
             iam.PolicyStatement(
                 actions=["aoss:DashboardsAccessAll"],
-                resources=[f'arn:aws:aoss:us-east-1:{Stack.of(self).account}:dashboards/default'],
+                resources=[f'arn:aws:aoss:{Stack.of(self).region}:{Stack.of(self).account}:dashboards/default'],
                 effect=iam.Effect.ALLOW,
             )
         )
