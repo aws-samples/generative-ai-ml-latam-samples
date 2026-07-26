@@ -1,4 +1,4 @@
 boto3
-langchain
-langchain-aws
+langchain-aws==0.2.10
+langchain-core==0.3.29
 pydantic

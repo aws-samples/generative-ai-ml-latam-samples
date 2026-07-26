@@ -156,11 +156,11 @@ def create_index(
     logger.info(f"Creating index {index_name} with body:")
     logger.info(index_body)
 
-    response = opensearch.indices.create(index_name, body=index_body)
+    response = opensearch.indices.create(index=index_name, body=index_body)
     logger.info("The response")
     logger.info(response)
 
 
 def delete_index(opensearch, index_name):
-    response = opensearch.indices.delete(index_name)
+    response = opensearch.indices.delete(index=index_name)
     logger.info(response)

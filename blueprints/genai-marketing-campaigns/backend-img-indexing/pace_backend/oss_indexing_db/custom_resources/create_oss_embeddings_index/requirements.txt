@@ -1,6 +1,6 @@
 cfnresponse
 urllib3<2
 aws-lambda-powertools
-opensearch-py
+opensearch-py==2.8.0
 requests-aws4auth
 aws-xray-sdk
