@@ -1,1 +1,1 @@
-opensearch-py
+boto3>=1.40

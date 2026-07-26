@@ -82,6 +82,12 @@ Net: **one fewer CDK app, ~3 policies, and 1 Lambda gone**, plus a dependency dr
 - **Low risk** — storage-layer swap, no embedding/data-model change, no live data to migrate, isolated worktree/branch.
 - **Main unknowns** (both cheap to resolve in preflight): CDK L1 coverage in the pinned version; exact boto3 `s3vectors` request/response field names (documented — `PutVectors`, `QueryVectors`, `GetVectors`).
 
+## 7a. Preflight results (2026-07-26)
+
+- **boto3 `s3vectors` client** — present in boto3 1.43.38 (all ops: `create_vector_bucket`, `create_index`, `put_vectors`, `query_vectors`, `get_vectors`, `delete_vectors`). The CDK venv ships boto3 1.28.63 (no `s3vectors`), but that only matters for the **Lambda runtime** → **pin `boto3>=1.40` (or bundle a layer)** in `index_data_fn` and `generate_recommendations_fn` requirements, since Python 3.13 Lambda's built-in boto3 may lag.
+- **CDK L1 `aws_cdk.aws_s3vectors`** — **NOT** in `aws-cdk-lib==2.185.0` (predates the S3 Vectors launch). **Decision: use the generic `CfnResource` escape hatch** to emit raw `AWS::S3Vectors::VectorBucket` and `AWS::S3Vectors::Index` — CloudFormation supports these types natively, so this is fully declarative with proper create/update/delete lifecycle and **no custom-resource Lambda** (better than the fallback noted in §6). Reference `Fn::GetAtt` for the index ARN / `Ref` for wiring.
+- **Immutability caveat** — every `AWS::S3Vectors::Index` property is *update-requires-Replacement*; if `IndexName` is fixed, replacement is blocked. Follow the prior S3-Vectors naming learning: don't hard-code the index name (let CFN generate it, expose via output), or hash-suffix it, so config changes can replace cleanly.
+
 ## 8. Reference facts (from AWS primary docs, 2026-07-26)
 
 - **API version** `s3vectors-2025-07-15`. Operations: `CreateVectorBucket`, `CreateIndex`, `PutVectors` (≤500/call), `QueryVectors` (topK ≤10,000; ≤100/page), `GetVectors` (≤100), `DeleteVectors` (≤500), `ListVectors`.

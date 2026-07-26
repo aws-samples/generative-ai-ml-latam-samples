@@ -14,7 +14,6 @@ To successfully deploy and run this stack you must:
 * A [bootstrapped AWS account](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html). 
 * NodeJS >= 14.0.0 
 * Python >= 3.10
-* Have deployed the **OpenSearch Roles Creation**
 * Have deployed the **Previous Campaigns Indexing Stack**
 * Have [access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to the Amazon Nova Pro, Titan Multimodal Embeddings, and Amazon Nova Canvas models
 
@@ -86,11 +85,10 @@ To deploy this stack run
 
 ```
 cdk deploy \
---parameters OSSCollectionHostParam=<<ImgIndexStack.OSSEmbeddingsIndexCollectionURLXXXXXX>> \
---parameters OSSEmbeddingsIndexNameParam=<<ImgIndexStack.EmbeddingsIndexName>> \
---parameters OSSCollectionARNParam=<<ImgIndexStack.OSSEmbeddingsIndexCollectionARNXXXXXX>> \
---parameters S3ImgsBucketParam=<<ImgIndexStack.ImagesBucketName>> \
---parameters OSSDatAccessRoleARNParam=<<CreateOpensearchRoles.DataQueryRole>>
+--parameters VectorBucketNameParam=<<ImgIndexStack.EmbeddingsIndexVectorBucketNameXXXXXX>> \
+--parameters VectorIndexNameParam=<<ImgIndexStack.EmbeddingsIndexVectorIndexNameXXXXXX>> \
+--parameters VectorIndexARNParam=<<ImgIndexStack.EmbeddingsIndexVectorIndexARNXXXXXX>> \
+--parameters S3ImgsBucketParam=<<ImgIndexStack.ImagesBucketName>>
 ```
 
 **Note:** The values for the inputs in-between < > signs are user defined inputs while the ones in-between << >> come from another stack.

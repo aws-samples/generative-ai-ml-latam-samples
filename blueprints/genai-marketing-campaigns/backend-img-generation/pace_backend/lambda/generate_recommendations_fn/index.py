@@ -20,8 +20,6 @@ import logging
 import json
 import boto3
 
-from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
-
 lambda_response = {
     "statusCode": 200,
     "headers": {
@@ -37,8 +35,8 @@ logger.setLevel(os.getenv("LOG_LEVEL"))
 
 CAMPAIGN_TABLE_NAME = os.getenv("CAMPAIGN_TABLE_NAME")
 HISTORIC_TABLE_NAME = os.getenv("HISTORIC_TABLE_NAME")
-OSS_HOST = os.getenv("OSS_HOST").replace("https://", "")
-OSS_EMBEDDINGS_INDEX_NAME = os.getenv("OSS_EMBEDDINGS_INDEX_NAME")
+VECTOR_BUCKET_NAME = os.getenv("VECTOR_BUCKET_NAME")
+VECTOR_INDEX_NAME = os.getenv("VECTOR_INDEX_NAME")
 REGION = os.getenv("REGION")
 
 campaignTable = boto3.resource("dynamodb").Table(CAMPAIGN_TABLE_NAME)
@@ -49,7 +47,7 @@ bedrock_runtime = boto3.client(
     region_name=REGION
 )
 
-oss_client = boto3.client('opensearchserverless')
+s3vectors_client = boto3.client("s3vectors", region_name=REGION)
 
 def encode_description(img_description: str = None, # Max 77 characters
                     dimension: int = 1024,  # 1,024 (default), 384, 256
@@ -84,41 +82,32 @@ def encode_description(img_description: str = None, # Max 77 characters
     return feature_vector
 
 
-def search_images(index_name, embedding, oss_client, node, objective, k=3):
+def search_images(embedding, node, objective, k=3):
+    """Query the S3 Vectors index for the k nearest images matching node/objective.
+
+    S3 Vectors applies the metadata filter DURING the search (pre-filter), so
+    topK=k returns the k nearest vectors that match node + objective — unlike
+    the previous OpenSearch post_filter which could return fewer (or zero)
+    matches.
+    """
     matched_images = []
 
-    body = {
-        "size": k,
-        "_source": {
-            "exclude": ["embeddings"],
-        },
-        "query":
-            {
-                "knn":
-                    {
-                        "embeddings": {
-                            "vector": embedding,
-                            "k": k,
-                        }
-                    }
-            },
-        "post_filter": {
-            "bool": {
-                "filter": [
-                    {"term": {"node": node}},
-                    {"term": {"objective": objective}}
-                ]
-            }
-        }
-    }
-
-    res = oss_client.search(index=index_name, body=body)
+    res = s3vectors_client.query_vectors(
+        vectorBucketName=VECTOR_BUCKET_NAME,
+        indexName=VECTOR_INDEX_NAME,
+        queryVector={"float32": [float(v) for v in embedding]},
+        topK=k,
+        filter={"$and": [{"node": {"$eq": node}}, {"objective": {"$eq": objective}}]},
+        returnMetadata=True,
+        returnDistance=True,
+    )
 
     logger.debug("The results")
     logger.debug(res)
 
-    for hit in res["hits"]["hits"]:
-        matched_images.append((hit["_source"]["results"], hit["_source"]["image_s3_uri"], hit["_source"]["img_element_list"], hit["_source"]["image_description"]))
+    for vector in res.get("vectors", []):
+        metadata = vector.get("metadata", {})
+        matched_images.append((metadata["results"], metadata["image_s3_uri"], metadata["img_element_list"], metadata["image_description"]))
 
     return matched_images
 
@@ -150,7 +139,7 @@ def handler(event, context):
 
     logger.debug("Retrieved campaign: ")
     logger.debug(campaign)
-    
+
     # Get attributes for campaign
     campaign_description = campaign['campaign_description']
     visual_concept = campaign['visual_concept']
@@ -163,19 +152,6 @@ def handler(event, context):
 
     logger.debug("Retrieving related images")
 
-    # Create the OpenSearch client
-    credentials = boto3.Session().get_credentials()
-    auth = AWSV4SignerAuth(credentials, REGION, 'aoss')
-
-    oss_client = OpenSearch(
-        hosts=[{'host': OSS_HOST, 'port': 443}],
-        http_auth=auth,
-        use_ssl=True,
-        verify_certs=True,
-        connection_class=RequestsHttpConnection,
-        timeout=300
-    )
-
     logger.debug("Embedding image description")
 
     #Embed img description
@@ -184,7 +160,7 @@ def handler(event, context):
     #img_desc_embedding = encode_description(visual_concept)
 
     #Search for the images that match the criteria
-    matched_images = search_images(OSS_EMBEDDINGS_INDEX_NAME, img_desc_embedding, oss_client, node, objective, k=5)
+    matched_images = search_images(img_desc_embedding, node, objective, k=5)
 
     logger.debug("Retrieved images")
     logger.debug(matched_images)
@@ -201,7 +177,7 @@ def handler(event, context):
     else:
         #Sort images based on result score
         matched_images.sort(key=lambda x: -x[0])
-        
+
         matched_images_map = {}
         for i in matched_images:
           matched_images_map[i[1]] = i

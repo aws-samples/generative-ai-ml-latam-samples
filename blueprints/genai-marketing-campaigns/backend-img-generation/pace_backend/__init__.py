@@ -41,35 +41,25 @@ class PACEBackendStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        oss_collection_host = CfnParameter(
+        vector_bucket_name = CfnParameter(
             self,
-            "OSSCollectionHostParam",
+            "VectorBucketNameParam",
             type="String",
-            description="URL for the OpenSearch Serverless collection",
+            description="Name of the S3 Vectors bucket that holds the embeddings index",
         )
 
-        oss_embeddings_index_name = CfnParameter(
+        vector_index_name = CfnParameter(
             self,
-            "OSSEmbeddingsIndexNameParam",
+            "VectorIndexNameParam",
             type="String",
-            description="Name for the OpenSearch Serverless Embeddings index",
-            allowed_pattern="^[a-z\-0-9]*$",
-            min_length=3,
-            max_length=20,
+            description="Name of the S3 Vectors embeddings index",
         )
 
-        oss_collection_arn = CfnParameter(
+        vector_index_arn = CfnParameter(
             self,
-            "OSSCollectionARNParam",
+            "VectorIndexARNParam",
             type="String",
-            description="ARN for the OpenSearch Serverless collection",
-        )
-
-        oss_data_access_role_arn = CfnParameter(
-            self,
-            "OSSDatAccessRoleARNParam",
-            type="String",
-            description="The ARN of the IAM role that has access to the OpenSearch Serverless collection",
+            description="ARN of the S3 Vectors embeddings index",
         )
 
         imgs_bucket_name = CfnParameter(
@@ -80,33 +70,6 @@ class PACEBackendStack(Stack):
         )
 
         s3_imgs_bucket = s3.Bucket.from_bucket_name(self, "S3ImgsBucket", imgs_bucket_name.value_as_string)
-
-        oss_data_access_role = iam.Role.from_role_arn(self, "OSSDataAccessRole", oss_data_access_role_arn.value_as_string)
-        # Add permissions to IAM role to access the collection
-        oss_data_access_role.add_to_principal_policy(
-            iam.PolicyStatement(
-                actions=["aoss:APIAccessAll"],
-                resources=[oss_collection_arn.value_as_string],
-                effect=iam.Effect.ALLOW,
-            )
-        )
-        oss_data_access_role.add_to_principal_policy(
-            iam.PolicyStatement(
-                actions=["aoss:DashboardsAccessAll"],
-                resources=[f'arn:aws:aoss:us-east-1:{Stack.of(self).account}:dashboards/default'],
-                effect=iam.Effect.ALLOW,
-            )
-        )
-        NagSuppressions.add_resource_suppressions(
-            oss_data_access_role,
-            [
-                {
-                    "id": "AwsSolutions-IAM5",
-                    "reason": """Policy implemented by CDK""",
-                },
-            ],
-            True,
-        )
 
         self.api_role = iam.Role(self, "ApiRole", assumed_by=iam.ServicePrincipal("apigateway.amazonaws.com"))
 
@@ -299,7 +262,6 @@ class PACEBackendStack(Stack):
             runtime=lambda_.Runtime.PYTHON_3_13,
             timeout=Duration.seconds(90),
             memory_size=128,
-            role=oss_data_access_role,
             environment={
                 "LOG_LEVEL": "DEBUG",
                 "CAMPAIGN_TABLE_NAME": self.campaignsTable.table_name,
@@ -344,16 +306,28 @@ class PACEBackendStack(Stack):
             runtime=lambda_.Runtime.PYTHON_3_13,
             timeout=Duration.seconds(90),
             memory_size=128,
-            role=oss_data_access_role,
             environment={
                 "LOG_LEVEL": "DEBUG",
                 "CAMPAIGN_TABLE_NAME": self.campaignsTable.table_name,
                 "HISTORIC_TABLE_NAME": self.historicCampaignsTable.table_name,
-                "OSS_HOST": oss_collection_host.value_as_string,
-                "OSS_EMBEDDINGS_INDEX_NAME": oss_embeddings_index_name.value_as_string,
+                "VECTOR_BUCKET_NAME": vector_bucket_name.value_as_string,
+                "VECTOR_INDEX_NAME": vector_index_name.value_as_string,
                 "REGION": Stack.of(self).region
             },
         )
+
+        self.generate_recommendations_fn.add_to_role_policy(
+            iam.PolicyStatement(
+                effect=iam.Effect.ALLOW,
+                actions=[
+                    "s3vectors:QueryVectors",
+                    "s3vectors:GetVectors",
+                    "s3vectors:GetIndex",
+                ],
+                resources=[vector_index_arn.value_as_string],
+            )
+        )
+
         self.campaignsTable.grant_read_data(self.generate_recommendations_fn.role)
         self.campaignsTable.grant_write_data(self.generate_recommendations_fn.role)
         self.historicCampaignsTable.grant_read_data(self.generate_recommendations_fn.role)

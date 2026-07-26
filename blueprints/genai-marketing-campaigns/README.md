@@ -50,7 +50,6 @@ This blueprint is organized as follows:
 blueprints/genai-marketing-campaigns
 |---backend-img-generation #Visuals generation component
 |---backend-img-indexing #Image search engine component
-|---create-opensearch-roles #Assists in the creation of Amazon OpenSearch roles 
 |---frontend # UI of the application
 |---readme_assets
 ```
@@ -66,10 +65,9 @@ blueprints/genai-marketing-campaigns
 
 To deploy this project, follow the instructions available in the README files of each of the components that make up this project. They must be deployed in the following order:
 
-1. create-opensearch-roles: This will create the necessary roles to create an OpenSearch serverless collection
-2. backend-img-indexing: This will deploy the assets required for the creation of the image search engine
-3. backend-img-generation: This will deploy the assets for the visuals generation workflow
-4. frontend: This will run the UI to interact with the application
+1. backend-img-indexing: This will deploy the assets required for the creation of the image search engine
+2. backend-img-generation: This will deploy the assets for the visuals generation workflow
+3. frontend: This will run the UI to interact with the application
 
 **Note:** Please make sure the following models are available in your region of deployment
 
