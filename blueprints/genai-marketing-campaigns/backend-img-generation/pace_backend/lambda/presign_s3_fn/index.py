@@ -37,7 +37,16 @@ REGION = os.getenv("AWS_REGION")
 logger = logging.getLogger()
 logger.setLevel(os.getenv("LOG_LEVEL"))
 
-s3_client = boto3.client("s3",config=Config(region_name = REGION,signature_version="s3v4"))
+# Pin the regional S3 endpoint. Without an explicit endpoint_url, botocore signs
+# against the legacy global host (bucket.s3.amazonaws.com); for buckets outside
+# us-east-1, S3 answers that host with a 307 redirect to the regional host, which
+# invalidates the SigV4 signature (403 SignatureDoesNotMatch) and leaves <img>
+# tags stuck loading. Signing against the regional host avoids the redirect.
+s3_client = boto3.client(
+    "s3",
+    endpoint_url=f"https://s3.{REGION}.amazonaws.com",
+    config=Config(region_name=REGION, signature_version="s3v4"),
+)
 
 duration = 24 * 60 * 60
 
