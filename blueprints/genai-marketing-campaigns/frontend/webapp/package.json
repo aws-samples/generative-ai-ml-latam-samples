@@ -27,7 +27,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@tabler/icons-react": "^2.40.0",
     "@tanstack/react-table": "^8.10.7",
-    "axios": "^1.13.5",
+    "axios": "^1.18.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "interweave": "^13.1.0",
