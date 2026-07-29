@@ -128,6 +128,7 @@ class ConnectCustomBotStack(Stack):
                 body=flow_definition,
                 variables={
                     "QUEUE_ID": str(connect_queues.first_queue),
+                    "INSTANCE_ID": INSTANCE_ID,
                     "REPLACE_LAMBDA_FUNCTION": lambda_functions.start_bot.function_arn,
                 },
             )

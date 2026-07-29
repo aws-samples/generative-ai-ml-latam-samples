@@ -399,7 +399,7 @@
     },
     {
       "Parameters": {
-        "QueueId": "arn:aws:connect:us-east-1:461004555540:instance/f5dbbb06-46e7-4435-beab-3b3303074765/queue/${QUEUE_ID}"
+        "QueueId": "arn:aws:connect:us-east-1:461004555540:instance/${INSTANCE_ID}/queue/${QUEUE_ID}"
       },
       "Identifier": "43fa1b05-de78-4874-aef3-588946d4ce74",
       "Type": "UpdateContactTargetQueue",
