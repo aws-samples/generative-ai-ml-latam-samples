@@ -19,19 +19,15 @@ import boto3
 import os
 import logging
 
-from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
-
 logger = logging.getLogger()
 logger.setLevel(os.getenv("LOG_LEVEL"))
 
 IMG_BUCKET = os.getenv("IMG_BUCKET")
+VECTOR_BUCKET_NAME = os.getenv("VECTOR_BUCKET_NAME")
+VECTOR_INDEX_NAME = os.getenv("VECTOR_INDEX_NAME")
+REGION = os.getenv("REGION") or boto3.session.Session().region_name
 
-client = boto3.client('opensearchserverless')
-region = boto3.session.Session().region_name
-service = 'aoss'
-
-OSS_HOST = os.getenv("OSS_HOST").replace("https://", "")
-OSS_EMBEDDINGS_INDEX_NAME = os.getenv("OSS_EMBEDDINGS_INDEX_NAME")
+s3vectors_client = boto3.client("s3vectors", region_name=REGION)
 
 lambda_response = {
     "statusCode": 200,
@@ -55,43 +51,35 @@ def lambda_handler(event, context):
         embedding = event['embeddings']
         metadata = event['metadata']
 
-        document = {
-            "id": event['img_key'].split('/')[-1].split('.')[0],
-            "results": metadata['results'],
-            "node": metadata['node'].lower(),
-            "objective":  metadata['objective'].lower(),
-            "image_s3_uri": photo_img_url,
-            "image_description": event["img_desc"],
-            "img_element_list": labels_list_str,
-            "embeddings": embedding
+        vector = {
+            "key": event['img_key'].split('/')[-1].split('.')[0],
+            "data": {"float32": [float(v) for v in embedding]},
+            "metadata": {
+                "results": metadata['results'],
+                "node": metadata['node'].lower(),
+                "objective": metadata['objective'].lower(),
+                "image_s3_uri": photo_img_url,
+                "image_description": event["img_desc"],
+                "img_element_list": labels_list_str,
+            },
         }
 
-        credentials = boto3.Session().get_credentials()
-        auth = AWSV4SignerAuth(credentials, region, service)
-
-        # Build the OpenSearch client
-        oss_client = OpenSearch(
-            hosts=[{'host': OSS_HOST, 'port': 443}],
-            http_auth=auth,
-            use_ssl=True,
-            verify_certs=True,
-            connection_class=RequestsHttpConnection,
-            timeout=300
+        s3vectors_response = s3vectors_client.put_vectors(
+            vectorBucketName=VECTOR_BUCKET_NAME,
+            indexName=VECTOR_INDEX_NAME,
+            vectors=[vector],
         )
 
-        oss_response = oss_client.index(
-            index=OSS_EMBEDDINGS_INDEX_NAME,
-            body=document,
-        )
+        logger.debug(s3vectors_response)
 
         lambda_response['statusCode'] = 201
-        lambda_response['body']['msg'] = 'Successfully added img to oss index'
+        lambda_response['body']['msg'] = 'Successfully added img to vector index'
 
     except  Exception as e:
         logger.error(e)
 
         lambda_response['statusCode'] = 500
-        lambda_response['body']['msg'] = 'Could not add image to oss index'
+        lambda_response['body']['msg'] = 'Could not add image to vector index'
 
         raise e
 

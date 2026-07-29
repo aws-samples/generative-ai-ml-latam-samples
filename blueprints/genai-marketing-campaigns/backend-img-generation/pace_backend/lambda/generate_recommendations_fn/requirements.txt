@@ -1,2 +1,2 @@
-boto3
-opensearch-py==2.8.0
+boto3>=1.40
+langchain

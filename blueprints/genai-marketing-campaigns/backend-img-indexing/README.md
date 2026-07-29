@@ -14,7 +14,6 @@ To successfully deploy and run this stack you must:
 * A [bootstrapped AWS account](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html). 
 * NodeJS >= 14.0.0 
 * Python >= 3.10
-* Have deployed the **OpenSearch Roles Creation** stack
 * Have [access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) to the Amazon Nova Pro and Amazon Titan Multimodal Embeddings
 
 ## Setup
@@ -69,14 +68,14 @@ command.
 
 ## Creation of the Campaign's Indexing Backend
 
-Deploying this CDK stack will provision an OpenSearch serverless index to hold the information about previous 
-marketing campaigns. This OpenSearch index is used as a search engine for obtaining campaigns similar to the one
+Deploying this CDK stack will provision an Amazon S3 Vectors index to hold the information about previous 
+marketing campaigns. This vector index is used as a search engine for obtaining campaigns similar to the one
 being generated that worked in the past. The following diagram illustrates the services and infrastructure being 
 deployed by this stack
 
 ![architecture](architecture_img_indexing.png)
 
-1. An [Amazon OpenSearch Serverless](https://aws.amazon.com/opensearch-service/features/serverless/) index is created to store the information of previous campaign's.
+1. An [Amazon S3 Vectors](https://aws.amazon.com/s3/features/vectors/) vector bucket and index are created to store the information of previous campaign's.
 2. [AWS Step Functions](https://aws.amazon.com/step-functions/) is used to orchestrate the campaign's processing workflow.
 3. [Amazon Lambda](https://aws.amazon.com/lambda/) functions are used to process the images being indexed.
 4. The image is described and key elements are identified using **Amazon Nova Pro** model on [Amazon Bedrock](https://aws.amazon.com/bedrock).
@@ -87,14 +86,8 @@ deployed by this stack
 To deploy this stack run
 
 ```
-cdk deploy \
---parameters OSSCollectionName=<Name of the OpenSearch Serverless collection to create> \
---parameters OSSEmbeddingsIndexName=<Name of the OpenSearch Serverless index to create> \
---parameters OSSDataIndexingRoleARNParam=<<CreateOpenSearchRoles.DataIndexingRole>> \
---parameters OSSDataQueryRoleARNParam=<<CreateOpenSearchRoles.DataQueryRole>>
+cdk deploy
 ```
-
-**Note:** The values for the inputs in-between < > signs are user defined inputs while the ones in-between << >> come from another stack.
 
 The most relevant outputs of the stack are:
 
@@ -102,9 +95,9 @@ The most relevant outputs of the stack are:
 * **IndexImgAPICognitoIdentityPoolIdXXXXXX**: The Cognito Identity Pool Id used to authenticate the API calls
 * **IndexImgAPICognitoUserPoolClientIdXXXXXX**: The Cognito User Pool Client Application Id used to authenticate the API calls
 * **IndexImgAPICognitoUserPoolIdXXXXX**: The Cognito User Pool used to authenticate the API calls
-* **OSSEmbeddingsIndexCollectionURLXXXXXX**: The OpenSearch Serverless Collection used to store the data of the images being indexed
-* **OSSEmbeddingsIndexCollectionARNXXXXXX**: The ARN of the OpenSearch Serverless Collection used to store the data of the images being indexed
-* **EmbeddingsIndexName**: The name of the created OpenSearch serverless index
+* **EmbeddingsIndexVectorBucketNameXXXXXX**: The name of the S3 Vectors bucket used to store the embeddings of the images being indexed
+* **EmbeddingsIndexVectorIndexNameXXXXXX**: The name of the created S3 Vectors index
+* **EmbeddingsIndexVectorIndexARNXXXXXX**: The ARN of the created S3 Vectors index
 * **ImagesBucketName**: The bucket where the indexed images will be stored
 
 The default name of this stack is: **GenAIMarketingCampaigns-ImgIndexStack**
@@ -206,8 +199,8 @@ The table below shows the resources provisioned by this CDK stack (prices rounde
 | Amazon Bedrock (Titan Multimodal Embeddings) | Create embeddings for the indexed images       | $1.00          |
 | AWS Step Functions                           | Workflow to index images                       | $1.00          |
 | AWS Lambda                                   | Functions to execute the logic to index images | $1.00          |
-| Amazon OpenSearch Serverless                 | Store and search embeddings of indexed images  | $350.00        |
-| **Total**                                    | Monthly total assuming 1000 indexed images     | **$360.00**    |
+| Amazon S3 Vectors                            | Store and search embeddings of indexed images  | $1.00          |
+| **Total**                                    | Monthly total assuming 1000 indexed images     | **$11.00**     |
 
 ## Clean up
 

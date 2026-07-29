@@ -34,16 +34,16 @@ from cdk_nag import NagSuppressions
 
 
 class IndexImgWorkflow(Construct):
-    """A Step Functions express workflow that takes an image file and indexes the image into Amazon OpenSearch"""
+    """A Step Functions express workflow that takes an image file and indexes the image into Amazon S3 Vectors"""
 
     def __init__(
         self,
         scope: Construct,
         construct_id: str,
         imgs_bucket: s3.IBucket,
-        oss_data_indexing_role: iam.Role,
-        oss_host: str,
-        oss_index_name: str,
+        vector_bucket_name: str,
+        vector_index_name: str,
+        vector_index_arn: str,
     ) -> None:
         super().__init__(scope, construct_id)
 
@@ -151,10 +151,22 @@ class IndexImgWorkflow(Construct):
             environment={
                 "LOG_LEVEL": "INFO",
                 "IMG_BUCKET": imgs_bucket.bucket_name,
-                "OSS_HOST": oss_host,
-                "OSS_EMBEDDINGS_INDEX_NAME": oss_index_name
+                "VECTOR_BUCKET_NAME": vector_bucket_name,
+                "VECTOR_INDEX_NAME": vector_index_name,
+                "REGION": Stack.of(self).region,
             },
-            role=oss_data_indexing_role,
+        )
+
+        index_data_fn.add_to_role_policy(
+            iam.PolicyStatement(
+                effect=iam.Effect.ALLOW,
+                actions=[
+                    "s3vectors:PutVectors",
+                    "s3vectors:GetVectors",
+                    "s3vectors:GetIndex",
+                ],
+                resources=[vector_index_arn],
+            )
         )
 
         NagSuppressions.add_resource_suppressions(
