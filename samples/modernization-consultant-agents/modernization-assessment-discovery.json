@@ -1,0 +1,102 @@
+{
+    "name": "modernization-assessment-discovery",
+    "description": "Consultor de discovery: levanta una app legada (cualquier lenguaje) y produce el reporte de discovery & assessment legible para el cliente (inventario, deuda técnica, vulnerabilidades, métricas)",
+    "model": "claude-opus-5.5",
+    "tools": [
+        "read",
+        "shell",
+        "write"
+    ],
+    "includeMcpJson": false,
+    "prompt": "file://./consultant-modernization-assets/prompts/modernization-assessment-discovery.md",
+    "welcomeMessage": "Consultor de Discovery & Assessment listo. Levanto la aplicación legada y produzco el reporte de estado, deuda técnica, vulnerabilidades y métricas, sin tocar el código de origen.",
+    "permissions": {
+        "rules": [
+            {
+                "capability": "shell",
+                "match": [
+                    "find *",
+                    "find",
+                    "grep *",
+                    "grep",
+                    "ls *",
+                    "ls",
+                    "cat *",
+                    "cat",
+                    "wc *",
+                    "wc",
+                    "head *",
+                    "head",
+                    "sort *",
+                    "sort",
+                    "uniq *",
+                    "uniq"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "shell",
+                "effect": "deny",
+                "match": [
+                    "*`*",
+                    "*$(*",
+                    "find * -exec*",
+                    "find * -ok*",
+                    "find * -delete*",
+                    "find * -fprint*",
+                    "find * -fls*"
+                ]
+            },
+            {
+                "capability": "shell",
+                "match": [
+                    "*"
+                ],
+                "exclude": [
+                    "cat",
+                    "cat *",
+                    "find",
+                    "find *",
+                    "grep",
+                    "grep *",
+                    "head",
+                    "head *",
+                    "ls",
+                    "ls *",
+                    "sort",
+                    "sort *",
+                    "uniq",
+                    "uniq *",
+                    "wc",
+                    "wc *"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**/documentacion_modernizacion/01_descubrimiento_evaluacion/**"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**"
+                ],
+                "exclude": [
+                    "**/documentacion_modernizacion/01_descubrimiento_evaluacion/**"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_read",
+                "effect": "allow"
+            },
+            {
+                "capability": "skill",
+                "effect": "allow"
+            }
+        ]
+    }
+}
