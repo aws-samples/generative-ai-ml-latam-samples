@@ -1,0 +1,136 @@
+{
+    "name": "modernization-assessment-orchestrator",
+    "description": "Orquesta el set consultor de modernización (discovery → arquitectura AS-IS → opciones de modernización) que produce el conocimiento legible para el cliente antes de tocar código",
+    "model": "claude-sonnet-5",
+    "tools": [
+        "read",
+        "shell",
+        "subagent/modernization-assessment-current-architecture",
+        "subagent/modernization-assessment-discovery",
+        "subagent/modernization-assessment-target-architecture",
+        "write"
+    ],
+    "includeMcpJson": false,
+    "prompt": "file://./consultant-modernization-assets/prompts/modernization-assessment-orchestrator.md",
+    "resources": [
+        "file://.kiro/agents/consultant-modernization-assets/rules/*.md"
+    ],
+    "welcomeMessage": "Orquestador consultor listo. Levanto la aplicación legada en tres fases (Discovery → AS-IS → Opciones de modernización) con documentos y diagramas para el cliente, sin tocar el código. Indícame la ruta de la aplicación a analizar.",
+    "permissions": {
+        "rules": [
+            {
+                "capability": "shell",
+                "match": [
+                    "mkdir -p *",
+                    "mkdir -p",
+                    "ls *",
+                    "ls",
+                    "find *",
+                    "find",
+                    "date *",
+                    "date",
+                    "pwd *",
+                    "pwd",
+                    "cat *",
+                    "cat",
+                    "grep *",
+                    "grep",
+                    "wc *",
+                    "wc",
+                    "head *",
+                    "head",
+                    "sort *",
+                    "sort",
+                    "uniq *",
+                    "uniq"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "shell",
+                "effect": "deny",
+                "match": [
+                    "*`*",
+                    "*$(*",
+                    "find * -exec*",
+                    "find * -ok*",
+                    "find * -delete*",
+                    "find * -fprint*",
+                    "find * -fls*"
+                ]
+            },
+            {
+                "capability": "shell",
+                "match": [
+                    "*"
+                ],
+                "exclude": [
+                    "cat",
+                    "cat *",
+                    "date",
+                    "date *",
+                    "find",
+                    "find *",
+                    "grep",
+                    "grep *",
+                    "head",
+                    "head *",
+                    "ls",
+                    "ls *",
+                    "mkdir -p",
+                    "mkdir -p *",
+                    "pwd",
+                    "pwd *",
+                    "sort",
+                    "sort *",
+                    "uniq",
+                    "uniq *",
+                    "wc",
+                    "wc *"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**/documentacion_modernizacion/**"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**"
+                ],
+                "exclude": [
+                    "**/documentacion_modernizacion/**"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "mcp",
+                "match": [
+                    "aws-knowledge/*"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "subagent",
+                "match": [
+                    "modernization-assessment-current-architecture",
+                    "modernization-assessment-discovery",
+                    "modernization-assessment-target-architecture"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "fs_read",
+                "effect": "allow"
+            },
+            {
+                "capability": "skill",
+                "effect": "allow"
+            }
+        ]
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "name": "modernization-assessment-target-architecture",
+    "description": "Consultor de opciones de modernización: a partir del discovery y el AS-IS, entrega restricciones del legado, patrones, escenarios comparados con una opción sugerida condicionada, decisiones abiertas (ADR) y validaciones previas (PoC), con servicios AWS verificados en la documentación oficial",
+    "model": "claude-opus-5.5",
+    "tools": [
+        "@aws-knowledge",
+        "read",
+        "shell",
+        "write"
+    ],
+    "includeMcpJson": false,
+    "mcpServers": {
+        "aws-knowledge": {
+            "url": "https://knowledge-mcp.global.api.aws"
+        }
+    },
+    "prompt": "file://./consultant-modernization-assets/prompts/modernization-assessment-target-architecture.md",
+    "welcomeMessage": "Consultor de opciones de modernización listo. Entrego restricciones, patrones, escenarios y decisiones abiertas para que el equipo elija el camino.",
+    "permissions": {
+        "rules": [
+            {
+                "capability": "shell",
+                "match": [
+                    "find *",
+                    "find",
+                    "grep *",
+                    "grep",
+                    "ls *",
+                    "ls",
+                    "cat *",
+                    "cat",
+                    "wc *",
+                    "wc",
+                    "head *",
+                    "head"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "shell",
+                "effect": "deny",
+                "match": [
+                    "*`*",
+                    "*$(*",
+                    "find * -exec*",
+                    "find * -ok*",
+                    "find * -delete*",
+                    "find * -fprint*",
+                    "find * -fls*"
+                ]
+            },
+            {
+                "capability": "shell",
+                "match": [
+                    "*"
+                ],
+                "exclude": [
+                    "cat",
+                    "cat *",
+                    "find",
+                    "find *",
+                    "grep",
+                    "grep *",
+                    "head",
+                    "head *",
+                    "ls",
+                    "ls *",
+                    "wc",
+                    "wc *"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**/documentacion_modernizacion/03_diseno_arquitectura_destino/**"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**"
+                ],
+                "exclude": [
+                    "**/documentacion_modernizacion/03_diseno_arquitectura_destino/**"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_read",
+                "effect": "allow"
+            },
+            {
+                "capability": "mcp",
+                "match": [
+                    "aws-knowledge/*"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "skill",
+                "effect": "allow"
+            }
+        ]
+    }
+}
