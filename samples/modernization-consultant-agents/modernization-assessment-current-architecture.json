@@ -1,0 +1,102 @@
+{
+    "name": "modernization-assessment-current-architecture",
+    "description": "Consultor de arquitectura AS-IS: reconstruye la arquitectura actual de la app legada (capas, bounded contexts, integraciones, flujos, acoplamiento) en un dossier con diagramas Mermaid embebidos",
+    "model": "claude-opus-5.5",
+    "tools": [
+        "read",
+        "shell",
+        "write"
+    ],
+    "includeMcpJson": false,
+    "prompt": "file://./consultant-modernization-assets/prompts/modernization-assessment-current-architecture.md",
+    "welcomeMessage": "Consultor de Arquitectura AS-IS listo. Reconstruyo la arquitectura actual a partir del discovery en un dossier único con diagramas Mermaid embebidos.",
+    "permissions": {
+        "rules": [
+            {
+                "capability": "shell",
+                "match": [
+                    "find *",
+                    "find",
+                    "grep *",
+                    "grep",
+                    "ls *",
+                    "ls",
+                    "cat *",
+                    "cat",
+                    "wc *",
+                    "wc",
+                    "head *",
+                    "head",
+                    "sort *",
+                    "sort",
+                    "uniq *",
+                    "uniq"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "shell",
+                "effect": "deny",
+                "match": [
+                    "*`*",
+                    "*$(*",
+                    "find * -exec*",
+                    "find * -ok*",
+                    "find * -delete*",
+                    "find * -fprint*",
+                    "find * -fls*"
+                ]
+            },
+            {
+                "capability": "shell",
+                "match": [
+                    "*"
+                ],
+                "exclude": [
+                    "cat",
+                    "cat *",
+                    "find",
+                    "find *",
+                    "grep",
+                    "grep *",
+                    "head",
+                    "head *",
+                    "ls",
+                    "ls *",
+                    "sort",
+                    "sort *",
+                    "uniq",
+                    "uniq *",
+                    "wc",
+                    "wc *"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**/documentacion_modernizacion/02_analisis_arquitectura/**"
+                ],
+                "effect": "allow"
+            },
+            {
+                "capability": "fs_write",
+                "match": [
+                    "**"
+                ],
+                "exclude": [
+                    "**/documentacion_modernizacion/02_analisis_arquitectura/**"
+                ],
+                "effect": "deny"
+            },
+            {
+                "capability": "fs_read",
+                "effect": "allow"
+            },
+            {
+                "capability": "skill",
+                "effect": "allow"
+            }
+        ]
+    }
+}
