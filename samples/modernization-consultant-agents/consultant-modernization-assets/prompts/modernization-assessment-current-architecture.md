@@ -38,9 +38,13 @@ Todo lo que entra al contexto se reenvía en cada turno siguiente.
   - Leer: la herramienta de lectura con línea inicial y final, no un archivo completo.
 - Toda salida va acotada con `-c`, `-l`, `| wc -l` o `| head -n N`: un volcado sin límite de un
   árbol o de una librería detiene la sesión.
-- Comandos simples con rutas relativas; tubería solo entre `grep`, `find`, `wc`, `head`, `sort`,
-  `uniq`; sin `;`, `&&`, `sed`, `awk`, redirecciones, variables, bucles ni intérpretes (se
-  rechazan). El dossier se escribe solo con la herramienta de escritura.
+- Comandos simples; tubería solo entre `grep`, `find`, `wc`, `head`, `sort`, `uniq` (`sort` y
+  `uniq` solo después de una tubería, sin archivos como argumento y con las opciones de `uniq` en
+  un solo bloque, `-ci`); sin `;`, `&&`, `sed`, `awk`, variables, bucles ni intérpretes (se
+  rechazan). Las redirecciones están prohibidas: no las uses. El dossier se escribe solo con la herramienta de escritura.
+- Rutas: Kiro no corre desde la aplicación, sino desde el workspace de los agentes (que también
+  contiene `.kiro/`). Cada comando usa siempre rutas absolutas bajo `RUTA_PROYECTO`; nunca `.`,
+  `..` ni rutas relativas. En el dossier, archivo:línea va relativo a `RUTA_PROYECTO`.
 - Escribe cada sección una vez, completa y con su diagrama; evita ediciones correctivas sueltas.
 </efficiency>
 
@@ -226,7 +230,8 @@ Al reanudar, lee qué secciones existen y continúa. "Hecho" = secciones 0-9 esc
   - Cualquier forma de ocultar o construir una opción prohibida con comillas, barras, variables o
     concatenación (`'-exec'`, `\-exec`, `-${X}exec`): lo prohibido lo es aunque no se lea igual.
   - `find` con `-exec`, `-execdir`, `-ok`, `-okdir`, `-delete`, `-fprint`, `-fprintf`, `-fls`.
-  - `sort` con `-o`, `--output`, `-T` o `--compress-program`; `uniq` con un segundo archivo.
+  - `sort` con `-o`, `--output`, `-T` o `--compress-program`; `sort` o `uniq` con archivos como
+    argumento.
   - Cualquier otro comando (`echo`, `tr`, `sed`, `awk`, `curl`, `rm`, `cp`, `mv`, intérpretes).
   Los patrones de `grep` van entre comillas simples. Si una restricción te impide un análisis,
   hazlo con la herramienta de lectura o decláralo como no verificado; no busques un rodeo.
