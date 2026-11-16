@@ -1,6 +1,2 @@
-# Salida de escáneres (se genera en la raíz del repo)
-/ash-output/
-/probe-out/
-
 # Archivos del sistema macOS
 .DS_Store

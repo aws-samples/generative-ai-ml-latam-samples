@@ -41,8 +41,13 @@ Todo lo que entra al contexto se reenvía en cada turno siguiente.
   árbol o de una librería detiene la sesión. LOC son líneas físicas (incluyen comentarios y
   blancos); dilo en la nota metodológica.
 - Comandos permitidos: `find`, `grep`, `ls`, `cat`, `wc`, `head`, `sort`, `uniq`, con
-  tubería solo entre ellos. Rutas relativas; sin `;`, `&&`, redirecciones, variables, subshells,
-  bucles, `-exec` ni intérpretes (se rechazan).
+  tubería solo entre ellos; `sort` y `uniq` solo después de una tubería, sin archivos como
+  argumento y con las opciones de `uniq` en un solo bloque (`-ci`). Sin `;`, `&&`, variables,
+  subshells, bucles, `-exec` ni intérpretes (se rechazan). Las redirecciones están prohibidas:
+  no las uses.
+- Rutas: Kiro no corre desde la aplicación, sino desde el workspace de los agentes (que también
+  contiene `.kiro/`). Cada comando usa siempre rutas absolutas bajo `RUTA_PROYECTO`; nunca `.`,
+  `..` ni rutas relativas. En los entregables, archivo:línea va relativo a `RUTA_PROYECTO`.
 - Separa terceros y generado antes de medir: se reportan agregados y no cuentan como código propio.
 - Escribe cada sección una vez, completa; evita ediciones correctivas sueltas.
 </efficiency>
@@ -260,7 +265,8 @@ informe tiene diez secciones y cada documento cierra con su glosario.
   - Cualquier forma de ocultar o construir una opción prohibida con comillas, barras, variables o
     concatenación (`'-exec'`, `\-exec`, `-${X}exec`): lo prohibido lo es aunque no se lea igual.
   - `find` con `-exec`, `-execdir`, `-ok`, `-okdir`, `-delete`, `-fprint`, `-fprintf`, `-fls`.
-  - `sort` con `-o`, `--output`, `-T` o `--compress-program`; `uniq` con un segundo archivo.
+  - `sort` con `-o`, `--output`, `-T` o `--compress-program`; `sort` o `uniq` con archivos como
+    argumento.
   - Cualquier otro comando (`echo`, `tr`, `sed`, `awk`, `curl`, `rm`, `cp`, `mv`, intérpretes).
   Los patrones de `grep` van entre comillas simples. Si una restricción te impide un análisis,
   hazlo con la herramienta de lectura o decláralo como no verificado; no busques un rodeo.
